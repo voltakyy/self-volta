@@ -936,10 +936,10 @@ class _TaskCard extends StatelessWidget {
                     ),
                     if (task.note.trim().isNotEmpty) ...[
                       const SizedBox(height: 3),
-                      Text(
-                        task.note.trim(),
+                      ExpandableNoteText(
+                        text: task.note.trim(),
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        readMoreColor: Star.star,
                         style: const TextStyle(
                           fontFamily: 'Manrope',
                           fontSize: 11,

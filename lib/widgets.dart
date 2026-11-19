@@ -2406,3 +2406,106 @@ class _InteractiveSpotlightDialogState
     );
   }
 }
+
+/// Widget teks deskripsi tugas/jadwal dengan batas 2 baris awal dan
+/// opsi toggle "Selengkapnya" / "Sembunyikan" jika melebihi 2 baris,
+/// menjaga tata letak kartu tetap rapi dan tidak meluap (overflow).
+class ExpandableNoteText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+  final int maxLines;
+  final Color? readMoreColor;
+
+  const ExpandableNoteText({
+    super.key,
+    required this.text,
+    required this.style,
+    this.maxLines = 2,
+    this.readMoreColor,
+  });
+
+  @override
+  State<ExpandableNoteText> createState() => _ExpandableNoteTextState();
+}
+
+class _ExpandableNoteTextState extends State<ExpandableNoteText> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final trimmed = widget.text.trim();
+    if (trimmed.isEmpty) return const SizedBox.shrink();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : double.infinity;
+        final span = TextSpan(text: trimmed, style: widget.style);
+        final tp = TextPainter(
+          text: span,
+          textDirection: Directionality.of(context),
+          maxLines: widget.maxLines,
+        )..layout(maxWidth: maxWidth);
+
+        final exceeds = tp.didExceedMaxLines;
+        final actionColor = widget.readMoreColor ?? Star.star;
+
+        if (!exceeds) {
+          return Text(
+            trimmed,
+            maxLines: widget.maxLines,
+            style: widget.style,
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              trimmed,
+              maxLines: _expanded ? null : widget.maxLines,
+              overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
+              style: widget.style,
+            ),
+            const SizedBox(height: 2),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                iosTapBuzz();
+                setState(() => _expanded = !_expanded);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 2, bottom: 2, right: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _expanded ? 'Sembunyikan' : 'Selengkapnya',
+                      style: widget.style.copyWith(
+                        fontFamily: 'Manrope',
+                        fontSize: (widget.style.fontSize ?? 11) * 0.95,
+                        fontWeight: FontWeight.w700,
+                        color: actionColor,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    Icon(
+                      _expanded
+                          ? Icons.keyboard_arrow_up_rounded
+                          : Icons.keyboard_arrow_down_rounded,
+                      size: 14,
+                      color: actionColor,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+

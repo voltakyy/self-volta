@@ -3,2030 +3,710 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulasi Beranda Ekosistem Bukit & Tabung Hidrasi - SELF VOLTA</title>
+  <title>Beranda Editorial Kertas & Tinta - SELF VOLTA</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    
-    /* Awan Melayang */
-    @keyframes floatCloud1 {
-      0% { transform: translateX(-35px); }
-      50% { transform: translateX(30px); }
-      100% { transform: translateX(-35px); }
-    }
-    @keyframes floatCloud2 {
-      0% { transform: translateX(25px); }
-      50% { transform: translateX(-25px); }
-      100% { transform: translateX(25px); }
-    }
-    .cloud-1 { animation: floatCloud1 24s ease-in-out infinite; }
-    .cloud-2 { animation: floatCloud2 30s ease-in-out infinite; }
-
-    /* ================= ANIMASI ARUS AIR MELINTANG (WATER CURRENTS) ================= */
-    @keyframes streamFlowRight {
-      0% { transform: translateX(-50%); }
-      100% { transform: translateX(0%); }
-    }
-    @keyframes streamFlowLeft {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-    @keyframes surfaceWave {
-      0% { transform: translateX(0) scaleY(1); }
-      50% { transform: translateX(-25%) scaleY(1.15); }
-      100% { transform: translateX(-50%) scaleY(1); }
-    }
-    @keyframes bubbleRiseUp {
-      0% { transform: translateY(30px) scale(0.5); opacity: 0; }
-      40% { opacity: 0.9; }
-      80% { opacity: 0.8; }
-      100% { transform: translateY(-35px) scale(1.1); opacity: 0; }
+    :root {
+      --canvas: #F8F9FA;
+      --card: #FFFFFF;
+      --border: #E8ECEF;
+      --navy: #143E48;
+      --navy-deep: #0D2B32;
+      --slate: #6B7280;
+      --amber: #F5A623;
+      --amber-dark: #B45309;
     }
 
-    .stream-fast { animation: streamFlowLeft 1.8s linear infinite; }
-    .stream-mid { animation: streamFlowRight 2.6s linear infinite; }
-    .stream-deep { animation: streamFlowLeft 3.4s linear infinite; }
-    .surface-wave-anim { animation: surfaceWave 2.2s ease-in-out infinite; }
-    .bubble-1 { animation: bubbleRiseUp 2.4s ease-in infinite; }
-    .bubble-2 { animation: bubbleRiseUp 3.1s ease-in infinite 0.7s; }
-    .bubble-3 { animation: bubbleRiseUp 2.8s ease-in infinite 1.4s; }
-
-    /* Kelap-kelip Bintang Malam */
-    @keyframes starTwinkle {
-      0%, 100% { opacity: 0.35; transform: scale(0.85); }
-      50% { opacity: 1; transform: scale(1.25); }
-    }
-    .star-t1 { animation: starTwinkle 3s ease-in-out infinite; }
-    .star-t2 { animation: starTwinkle 4.2s ease-in-out infinite 1.2s; }
-    .star-t3 { animation: starTwinkle 3.5s ease-in-out infinite 2.1s; }
-
-    /* Ambient Pulse Halus Shadow Glow */
-    @keyframes orbGlowPulse {
-      0%, 100% { transform: scale(1); opacity: 0.85; }
-      50% { transform: scale(1.08); opacity: 1; }
-    }
-    .orb-glow-anim {
-      animation: orbGlowPulse 4s ease-in-out infinite;
-      transform-origin: center;
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #0F172A;
+      color: #0F172A;
     }
 
-    /* Animasi Bento 2: Ring Gymnastic Pulse */
-    @keyframes ringPulse {
-      0%, 100% { transform: scale(1); opacity: 0.7; }
-      50% { transform: scale(1.12); opacity: 1; }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
     }
-    .ring-pulse-anim { animation: ringPulse 2.8s ease-in-out infinite; transform-origin: center; }
 
-    /* Animasi Bento 3: Coin Stack Metallic Shine */
-    @keyframes coinShine {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.9; }
+    /* Accessibility: Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
-    .coin-shine-anim { animation: coinShine 3.2s ease-in-out infinite; }
 
-    /* Animasi Bento 4: Nutrient Spheres Floating */
-    @keyframes nutrientBob1 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+    /* Interactive element affordance */
+    button, [role="button"], a {
+      cursor: pointer;
     }
-    @keyframes nutrientBob2 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-7px); }
-    }
-    @keyframes nutrientBob3 {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-    .nutrient-1 { animation: nutrientBob1 2.6s ease-in-out infinite; }
-    .nutrient-2 { animation: nutrientBob2 3.4s ease-in-out infinite 0.5s; }
-    .nutrient-3 { animation: nutrientBob3 2.9s ease-in-out infinite 1.1s; }
 
-    #prayer-card {
-      transition: background 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.6s ease, box-shadow 0.6s ease;
+    button:focus-visible, a:focus-visible, input:focus-visible {
+      outline: 2px solid var(--navy);
+      outline-offset: 2px;
+    }
+
+    /* Custom thin scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 p-2 md:p-4 min-h-screen overflow-x-auto">
+<body class="p-2 sm:p-4 min-h-screen flex flex-col items-center">
 
-  <!-- Top Toolbar: Posisi Layar & Zoom Mockup -->
-  <div class="w-full max-w-[420px] mb-2 flex flex-col gap-1.5 bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-300">
-    <div class="flex items-center justify-between">
-      <span class="font-bold text-[11px] text-slate-400">Posisi Layar:</span>
-      <div class="flex items-center gap-1">
-        <button onclick="setLayoutAlign('start')" id="btn-align-left" class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition-all text-[11px]">
-          ⬅️ Kiri Layar
-        </button>
-        <button onclick="setLayoutAlign('center')" id="btn-align-center" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition-all text-[11px]">
-          ⏺️ Tengah
-        </button>
-        <button onclick="setLayoutAlign('end')" id="btn-align-right" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 transition-all text-[11px]">
-          ➡️ Kanan
-        </button>
-      </div>
-    </div>
-    
-    <!-- Tombol Khusus Animasi Bento 2x2 vs 4x2 Horisontal -->
-    <div class="flex items-center justify-between pt-1 border-t border-slate-800 text-[11px]">
-      <span class="font-bold text-amber-300">Animasi Geser:</span>
-      <div class="flex items-center gap-1">
-        <button id="btn-mode-split" onclick="setHeroMode('split')" class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[10px]">
-          ◫ 2×2 Sejajar
-        </button>
-        <button id="btn-mode-p4" onclick="setHeroMode('prayer_4x2')" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium text-[10px]">
-          Sholat 4×2 (Cuaca Geser ➔)
-        </button>
-        <button id="btn-mode-w4" onclick="setHeroMode('weather_4x2')" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium text-[10px]">
-          Cuaca 4×2 (Sholat Geser ➔)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Layout Wrapper Container (Bisa Digeser Kiri / Tengah / Kanan) -->
-  <div id="layout-wrapper" class="flex flex-col items-start w-full transition-all duration-300">
-
-  <!-- Interactive Atmosphere Controller -->
-  <div class="w-full max-w-[420px] mb-3 bg-slate-900/95 backdrop-blur border border-slate-800 rounded-2xl p-3.5 shadow-2xl">
-    <div class="flex items-center justify-between mb-1.5">
+  <!-- Dev Toolbar: Pengatur Waktu Simulasi & Posisi Layar -->
+  <header class="w-full max-w-[420px] mb-3 bg-slate-900 border border-slate-800 rounded-2xl p-3 text-xs text-slate-300 shadow-xl">
+    <div class="flex items-center justify-between mb-2">
       <div class="flex items-center gap-2">
-        <span id="sky-badge-icon" class="text-base">☀️</span>
-        <span id="sky-phase-label" class="text-xs font-bold uppercase tracking-wider text-amber-300">Pagi Cerah Benderang (06:15)</span>
+        <span class="font-bold text-[11px] text-slate-400 uppercase tracking-wider">Simulasi Beranda</span>
+        <span class="bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">Kertas & Tinta</span>
       </div>
-      <span id="time-display" class="font-bold text-xs bg-slate-950 px-2.5 py-1 rounded-lg text-amber-300 border border-slate-700 tracking-wide">06:15 WIB</span>
+      <span id="time-display" class="font-mono font-bold text-xs bg-slate-950 px-2 py-0.5 rounded text-amber-400 border border-slate-800">06:15 WIB</span>
     </div>
 
-    <!-- Time Range Slider 24 Jam Penuh (00:00 - 23:55) -->
-    <input id="time-slider" type="range" min="0" max="1435" value="375" step="5" class="w-full accent-amber-500 cursor-pointer h-2 bg-slate-800 rounded-lg">
-    
-    <!-- Presets Siklus 24 Jam Lengkap & Granular (12 Titik Kunci Realistis Indonesia) -->
-    <div class="space-y-1.5 mt-2">
-      <div class="grid grid-cols-4 gap-1.5">
-        <button onclick="setPreset(150)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold rounded-lg text-indigo-300 transition-colors">
-          🕯️ Tahajjud (02:30)
-        </button>
-        <button onclick="setPreset(240)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold rounded-lg text-slate-300 transition-colors">
-          🌄 Subuh (04:00)
-        </button>
-        <button onclick="setPreset(315)" class="py-1 px-1 bg-amber-950/80 hover:bg-amber-900 text-[10px] font-bold rounded-lg text-amber-300 border border-amber-500/50 transition-colors">
-          🌅 Terbit (05:15)
-        </button>
-        <button onclick="setPreset(375)" class="py-1 px-1 bg-sky-950 hover:bg-sky-900 text-[10px] font-bold rounded-lg text-sky-200 border border-sky-400/40 transition-colors">
-          ☀️ Pagi Terang (06:15)
-        </button>
-      </div>
-      <div class="grid grid-cols-4 gap-1.5">
-        <button onclick="setPreset(455)" class="py-1 px-1 bg-sky-900 hover:bg-sky-800 text-[10px] font-bold rounded-lg text-sky-300 transition-colors">
-          🌤️ Pagi Segar (07:35)
-        </button>
-        <button onclick="setPreset(540)" class="py-1 px-1 bg-sky-900 hover:bg-sky-800 text-[10px] font-bold rounded-lg text-sky-300 transition-colors">
-          ✨ Dhuha (09:00)
-        </button>
-        <button onclick="setPreset(683)" class="py-1 px-1 bg-cyan-950 hover:bg-cyan-900 text-[10px] font-bold rounded-lg text-cyan-200 border border-cyan-500/40 transition-colors">
-          ☀️ Dzuhur (11:23)
-        </button>
-        <button onclick="setPreset(925)" class="py-1 px-1 bg-amber-950/70 hover:bg-amber-900 text-[10px] font-bold rounded-lg text-amber-200 border border-amber-500/40 transition-colors">
-          🌇 Sore Emas (15:25)
-        </button>
-      </div>
-      <div class="grid grid-cols-4 gap-1.5">
-        <button onclick="setPreset(990)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-bold rounded-lg text-amber-200 transition-colors">
-          🌤️ Sore Teduh (16:30)
-        </button>
-        <button onclick="setPreset(1035)" class="py-1 px-1 bg-orange-950 hover:bg-orange-900 text-[10px] font-bold rounded-lg text-orange-300 border border-orange-500/50 transition-colors">
-          🌇 Golden Hour (17:15)
-        </button>
-        <button onclick="setPreset(1075)" class="py-1 px-1 bg-rose-950 hover:bg-rose-900 text-[10px] font-bold rounded-lg text-rose-300 border border-rose-500/50 transition-colors">
-          🌆 Maghrib (17:55)
-        </button>
-        <button onclick="setPreset(1150)" class="py-1 px-1 bg-indigo-950 hover:bg-indigo-900 text-[10px] font-bold rounded-lg text-indigo-300 transition-colors">
-          🌙 Isya (19:10)
-        </button>
-      </div>
+    <!-- Time Slider 24 Jam -->
+    <div class="space-y-1">
+      <label for="time-slider" class="text-[10px] text-slate-400 font-medium flex justify-between">
+        <span>Geser Jam Harian</span>
+        <span id="slider-phase-label" class="text-slate-300 font-semibold">Pagi (Subuh lewat, menuju Dzuhur)</span>
+      </label>
+      <input id="time-slider" type="range" min="0" max="1435" value="375" step="5" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
     </div>
 
-    <!-- Toggle Baris Imsak/Terbit/Dhuha -->
-    <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-      <span class="text-slate-400">Jadwal Sunnah (Imsak · Terbit · Dhuha):</span>
-      <button id="toggle-imsak-btn" onclick="toggleImsakRow()" class="px-2.5 py-0.5 rounded-lg font-bold bg-slate-800 text-amber-300 hover:bg-slate-700 transition-colors border border-slate-700">
-        Aktif (Klik sembunyikan)
+    <!-- Preset Sholat & Waktu Utama -->
+    <div class="grid grid-cols-5 gap-1 mt-2.5">
+      <button type="button" onclick="setPreset(240)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-semibold rounded text-slate-200 transition-colors text-center">
+        Subuh
+      </button>
+      <button type="button" onclick="setPreset(375)" class="py-1 px-1 bg-amber-500 text-slate-950 font-bold text-[10px] rounded transition-colors text-center" id="preset-btn-active">
+        Pagi
+      </button>
+      <button type="button" onclick="setPreset(683)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-semibold rounded text-slate-200 transition-colors text-center">
+        Dzuhur
+      </button>
+      <button type="button" onclick="setPreset(925)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-semibold rounded text-slate-200 transition-colors text-center">
+        Ashar
+      </button>
+      <button type="button" onclick="setPreset(1075)" class="py-1 px-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-semibold rounded text-slate-200 transition-colors text-center">
+        Maghrib
       </button>
     </div>
-  </div>
+  </header>
 
-  <!-- Mobile Frame Container -->
-  <div class="w-full max-w-[400px] bg-[#F8F9FA] text-[#143E48] rounded-[36px] overflow-hidden shadow-2xl border-4 border-slate-800 relative flex flex-col" style="height: 840px;">
+  <!-- Mobile Screen Frame (Ukuran Nyata 390 x 844 px) -->
+  <main class="w-full max-w-[400px] bg-[#F8F9FA] text-[#143E48] rounded-[36px] overflow-hidden shadow-2xl border-4 border-slate-800 relative flex flex-col" style="height: 840px;">
     
-    <!-- Status Bar -->
-    <div class="px-6 pt-3 pb-1 flex justify-between items-center text-xs text-[#6B7280] font-medium select-none">
-      <span id="status-clock" class="font-bold text-[#143E48]">06:15</span>
-      <div class="flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.64-.64C7.93 20.26 9.88 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/></svg>
-        <span class="text-[10px] font-bold">100%</span>
+    <!-- Top System Status Bar -->
+    <div class="px-6 pt-3 pb-1 flex justify-between items-center text-xs text-[#6B7280] font-medium select-none bg-[#F8F9FA]">
+      <span id="status-clock" class="font-bold text-[#143E48] tabular-nums">06:15</span>
+      <div class="flex items-center gap-1.5" aria-label="Status baterai dan sinyal">
+        <svg class="w-3.5 h-3.5 fill-current text-[#143E48]" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.64-.64C7.93 20.26 9.88 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/>
+        </svg>
+        <span class="text-[10px] font-bold text-[#143E48]">100%</span>
       </div>
     </div>
 
-    <!-- Scrollable Body -->
-    <div class="flex-1 overflow-y-auto px-4 py-2 space-y-3.5">
-      
-      <!-- ==================== TOP: HEADER & PRAYER HERO ==================== -->
-      <div>
-        <div class="flex justify-between items-end mb-2.5">
+    <!-- Scrollable Screen Content Body -->
+    <div class="flex-1 overflow-y-auto custom-scroll px-4 py-2 space-y-3.5">
+
+      <!-- ================= 1. KOP / SAPAAN BERSIH ================= -->
+      <section aria-labelledby="greeting-heading">
+        <div class="flex justify-between items-end">
           <div>
-            <div class="text-[11px] font-bold tracking-wider text-[#6B7280] uppercase">JUMAT, 15 NOVEMBER 2026</div>
-            <h1 id="greeting-text" class="text-2xl font-black text-[#143E48] tracking-tight leading-none mt-1">Selamat Pagi</h1>
+            <div id="date-label" class="text-[11px] font-bold tracking-wider text-[#6B7280] uppercase">JUMAT, 15 NOVEMBER 2026</div>
+            <h1 id="greeting-heading" class="text-2xl font-black text-[#143E48] tracking-tight leading-none mt-1">Selamat Pagi</h1>
           </div>
-          <div class="flex items-center gap-1.5 bg-white border border-[#E8ECEF] px-2.5 py-1 rounded-full shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-            <span id="user-xp-chip" class="text-xs font-bold text-[#143E48]">Lv 1 · 240 XP</span>
+          <!-- Chip Level & XP Ringkas -->
+          <div class="flex items-center gap-1.5 bg-white border border-[#E8ECEF] px-2.5 py-1 rounded-full shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-[#F5A623]"></span>
+            <span id="user-xp-chip" class="text-xs font-bold text-[#143E48] tabular-nums">Lv 1 · 240 XP</span>
           </div>
         </div>
+      </section>
 
-        <!-- ================= TOP HERO: BENTO 2x2 SEJAJAR -> KLIK JADI 4x2 HORIZONTAL ================= -->
-        <!-- User Request: "maaf aku ingin jadi 4x2 , bukan ke bawah tapi kesamping dan secara animasi cuaca akan tergeser sampai tersembunyi" -->
-        <div id="hero-bento-container" class="relative w-full overflow-hidden mb-3.5" style="height: 185px;">
-          
-          <!-- BENTO 1: JADWAL SHOLAT (Left Card) -->
-          <div id="bento-prayer-card" class="rounded-[22px] p-3.5 text-white absolute inset-y-0 overflow-hidden shadow-lg border cursor-pointer hover:border-amber-400/80 transition-all duration-500 flex flex-col justify-between group select-none z-10" style="left: 0px; width: calc(50% - 5px); background: linear-gradient(180deg, #0284C7 0%, #38BDF8 35%, #7DD3FC 70%, #BAE6FD 100%); border-color: rgba(186, 230, 253, 0.55); height: 185px;">
-            
-            <!-- Background SVG Langit & Siluet Bukit -->
-            <svg id="prayer-sky-svg" class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 380 185" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <radialGradient id="sun-grad-prayer" cx="50%" cy="50%" r="50%">
-                  <stop id="orb-stop-1-p" offset="0%" stop-color="#FEF08A"/>
-                  <stop id="orb-stop-2-p" offset="50%" stop-color="#FBBF24"/>
-                  <stop id="orb-stop-3-p" offset="80%" stop-color="#F59E0B"/>
-                  <stop id="orb-stop-4-p" offset="100%" stop-color="#D97706"/>
-                </radialGradient>
-              </defs>
-
-              <!-- Bintang Malam (Sholat) -->
-              <g id="stars-layer-p" opacity="0" class="transition-opacity duration-700">
-                <circle cx="30" cy="20" r="1.2" fill="#FFFFFF"/>
-                <circle cx="75" cy="35" r="1.4" fill="#FFFBEB"/>
-                <circle cx="120" cy="18" r="1.3" fill="#FFFFFF"/>
-                <circle cx="170" cy="30" r="1.5" fill="#FFFBEB"/>
-                <circle cx="230" cy="22" r="1.2" fill="#FFFFFF"/>
-                <circle cx="290" cy="36" r="1.4" fill="#FFFBEB"/>
-                <circle cx="340" cy="20" r="1.3" fill="#FFFFFF"/>
-              </g>
-
-              <!-- Busur Orbit Sholat -->
-              <path id="orbit-arc-p" d="M 20,110 Q 190,25 360,110" fill="none" stroke="rgba(255, 255, 255, 0.22)" stroke-width="1" stroke-dasharray="2.5,2.5"/>
-
-              <!-- Siluet Bukit Sholat -->
-              <path id="back-hill-p" d="M 0,115 Q 95,85 190,102 T 380,95 L 380,250 L 0,250 Z" fill="rgba(14, 116, 144, 0.55)" class="transition-colors duration-700"/>
-              <path id="front-hill-p" d="M 0,130 Q 110,102 210,118 T 380,115 L 380,250 L 0,250 Z" fill="rgba(15, 80, 100, 0.78)" class="transition-colors duration-700"/>
+      <!-- ================= 2. KARTU JANGKAR SHOLAT (TITIK FOKUS UTAMA) ================= -->
+      <!-- Solid Deep Petrol Navy, satu kesatuan, bebas gradien buatan, fokus dan tenang -->
+      <section class="rounded-[20px] bg-[#143E48] text-white p-4 shadow-md relative overflow-hidden" aria-labelledby="prayer-hero-title">
+        
+        <!-- Baris Atas: Lokasi + Cuaca Ringkas + Lonceng Pengaturan Notifikasi -->
+        <div class="flex items-center justify-between text-white/80 pb-3 border-b border-white/10">
+          <div class="flex items-center gap-1.5 min-w-0">
+            <svg class="w-3.5 h-3.5 fill-current text-white/70 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
             </svg>
-
-            <!-- CELESTIAL SUN/MOON OVERLAY (100% PURE CIRCLE - ZERO GEPENG!) -->
-            <div id="celestial-plane-p" class="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
-              <div id="celestial-body-p" class="absolute will-change-transform -translate-x-1/2 -translate-y-1/2" style="left: 88px; top: 38px;">
-                <!-- Ambient Soft Bloom Halo -->
-                <div id="orb-glow-p" class="w-12 h-12 rounded-full absolute -inset-3 pointer-events-none" style="background: radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, rgba(245, 158, 11, 0.25) 55%, transparent 75%); filter: blur(4px);"></div>
-                <!-- 100% Round Concentric Celestial Disc -->
-                <div id="orb-disc-p" class="w-6 h-6 rounded-full relative shadow-md" style="background: radial-gradient(circle at 35% 35%, #FEF08A 0%, #FBBF24 50%, #F59E0B 80%, #D97706 100%); box-shadow: 0 0 10px rgba(251, 191, 36, 0.8), 0 0 20px rgba(245, 158, 11, 0.4);"></div>
-              </div>
-            </div>
-
-            <!-- Konten Kartu Sholat (Z-Index 10) -->
-            <div class="relative z-10 flex flex-col justify-between h-full">
-              <!-- Top Row: Lokasi Kota + Tombol Tipis Chevron '>' (saat 2x2) / '✕' (saat 4x2) -->
-              <div class="flex justify-between items-center">
-                <div class="flex items-center gap-1 min-w-0 pr-1">
-                  <span class="text-[9px] text-white/95 font-semibold flex items-center gap-1 truncate">
-                    <svg class="w-2.5 h-2.5 fill-current text-white/80 shrink-0" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                    <span class="truncate">Surakarta</span>
-                  </span>
-                </div>
-                <!-- Directional Arrow Button Sholat: Thin Vector Chevron '>' in 2x2, Thin '✕' in 4x2 -->
-                <button id="btn-toggle-prayer-mode" onclick="togglePrayerExpand(event)" class="w-6 h-6 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 active:scale-90 text-white transition-all flex items-center justify-center shadow-xs flex-shrink-0 cursor-pointer" title="Perluas / Tutup">
-                  <span id="prayer-arrow-icon" class="flex items-center justify-center">
-                    <svg class="w-3.5 h-3.5 text-white/95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                    </svg>
-                  </span>
-                </button>
-              </div>
-
-              <!-- Main Hero Content -->
-              <div class="my-auto py-0.5" onclick="togglePrayerExpand(event)">
-                <div class="flex items-baseline justify-between">
-                  <div>
-                    <div id="bento-prayer-name" class="text-lg font-black text-white tracking-tight drop-shadow-sm leading-tight">Dzuhur</div>
-                    <div id="bento-prayer-time" class="text-2xl font-black text-white tracking-tight drop-shadow-md -mt-0.5">11:23</div>
-                  </div>
-                  <div class="text-right">
-                    <span id="bento-prayer-countdown" class="bg-black/45 backdrop-blur-xs border border-white/20 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-xs inline-block whitespace-nowrap">
-                      3 mnt lagi
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ================= VIEW KETIKA 2x2 (RINGKAS) ================= -->
-              <div id="prayer-compact-view" onclick="togglePrayerExpand(event)" class="transition-opacity duration-300">
-                <div class="flex items-center justify-between pt-1 border-t border-white/15 text-[8px] font-bold">
-                  <!-- 5 Dot Indikator Waktu Sholat -->
-                  <div class="flex items-center gap-1.5">
-                    <span id="dot-subuh" class="w-1.5 h-1.5 rounded-full bg-white/40" title="Subuh"></span>
-                    <span id="dot-dzuhur" class="w-2 h-2 rounded-full bg-amber-400 ring-2 ring-amber-300/60 shadow-xs animate-pulse" title="Dzuhur"></span>
-                    <span id="dot-ashar" class="w-1.5 h-1.5 rounded-full bg-white/40" title="Ashar"></span>
-                    <span id="dot-maghrib" class="w-1.5 h-1.5 rounded-full bg-white/40" title="Maghrib"></span>
-                    <span id="dot-isya" class="w-1.5 h-1.5 rounded-full bg-white/40" title="Isya"></span>
-                  </div>
-                  <span class="text-white/70 text-[8px] font-medium">Jadwal Sholat</span>
-                </div>
-              </div>
-
-              <!-- ================= VIEW KETIKA 4x2 (EXPANDED FULL-WIDTH HORIZONTAL) ================= -->
-              <div id="prayer-expanded-view" class="hidden flex-col gap-1 pt-1 border-t border-white/15 transition-opacity duration-300">
-                <!-- Baris 5 Waktu Sholat Penuh 5 Kolom Horisontal -->
-                <div class="grid grid-cols-5 gap-1.5 text-center">
-                  <div class="py-0.5 px-1 rounded-lg bg-black/20">
-                    <div class="text-[8.5px] text-white/70 font-semibold">Subuh</div>
-                    <div class="text-[11px] font-bold text-white">03:47</div>
-                  </div>
-                  <div class="py-0.5 px-1 rounded-lg bg-black/45 border border-amber-400/80 shadow-xs">
-                    <div class="text-[8.5px] text-amber-300 font-extrabold flex items-center justify-center gap-0.5">
-                      <span class="w-1 h-1 rounded-full bg-amber-400 animate-ping"></span>
-                      <span>Dzuhur</span>
-                    </div>
-                    <div class="text-[11px] font-black text-amber-300">11:23</div>
-                  </div>
-                  <div class="py-0.5 px-1 rounded-lg bg-black/20">
-                    <div class="text-[8.5px] text-white/70 font-semibold">Ashar</div>
-                    <div class="text-[11px] font-bold text-white">14:45</div>
-                  </div>
-                  <div class="py-0.5 px-1 rounded-lg bg-black/20">
-                    <div class="text-[8.5px] text-white/70 font-semibold">Maghrib</div>
-                    <div class="text-[11px] font-bold text-white">17:37</div>
-                  </div>
-                  <div class="py-0.5 px-1 rounded-lg bg-black/20">
-                    <div class="text-[8.5px] text-white/70 font-semibold">Isya</div>
-                    <div class="text-[11px] font-bold text-white">18:51</div>
-                  </div>
-                </div>
-
-                <!-- Baris Sunnah Tanpa Tombol Kembali (Bersih & Rapi Tanpa Kepotong!) -->
-                <div class="flex items-center justify-center gap-3 text-[8.5px] px-3 py-0.5 bg-black/35 backdrop-blur-xs rounded-full text-white/90 mx-auto border border-white/10">
-                  <span>Imsak <strong class="text-white">03:37</strong></span>
-                  <span class="text-white/30">·</span>
-                  <span>Terbit <strong class="text-amber-200">05:07</strong></span>
-                  <span class="text-white/30">·</span>
-                  <span>Dhuha <strong class="text-sky-200">05:27</strong></span>
-                </div>
-              </div>
-
-            </div>
+            <span class="text-xs font-bold text-white tracking-wide">Surakarta</span>
+            <span class="text-white/40">·</span>
+            <span id="weather-summary-text" class="text-xs text-white/80">Solo 29° Cerah</span>
           </div>
 
-          <!-- BENTO 2: PERKIRAAN CUACA (Right Card) -->
-          <div id="bento-weather-card" class="rounded-[22px] p-3.5 text-white absolute inset-y-0 overflow-hidden shadow-lg border cursor-pointer hover:border-sky-400/80 transition-all duration-500 flex flex-col justify-between group select-none z-10" style="left: calc(50% + 5px); width: calc(50% - 5px); background: linear-gradient(180deg, #0284C7 0%, #38BDF8 35%, #7DD3FC 70%, #BAE6FD 100%); border-color: rgba(186, 230, 253, 0.55); height: 185px;">
-            
-            <!-- Background SVG Langit & Orbit Siklus -->
-            <svg id="weather-sky-svg" class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 380 185" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <radialGradient id="sun-grad-weather" cx="50%" cy="50%" r="50%">
-                  <stop id="orb-stop-1-w" offset="0%" stop-color="#FEF08A"/>
-                  <stop id="orb-stop-2-w" offset="50%" stop-color="#FBBF24"/>
-                  <stop id="orb-stop-3-w" offset="80%" stop-color="#F59E0B"/>
-                  <stop id="orb-stop-4-w" offset="100%" stop-color="#D97706"/>
-                </radialGradient>
-              </defs>
-
-              <!-- Busur Orbit Cuaca -->
-              <path id="orbit-arc-w" d="M 20,110 Q 190,25 360,110" fill="none" stroke="rgba(255, 255, 255, 0.22)" stroke-width="1" stroke-dasharray="2.5,2.5"/>
-
-              <!-- Siluet Bukit Cuaca -->
-              <path id="back-hill-w" d="M 0,115 Q 95,85 190,102 T 380,95 L 380,250 L 0,250 Z" fill="rgba(14, 116, 144, 0.55)" class="transition-colors duration-700"/>
-              <path id="front-hill-w" d="M 0,130 Q 110,102 210,118 T 380,115 L 380,250 L 0,250 Z" fill="rgba(15, 80, 100, 0.78)" class="transition-colors duration-700"/>
+          <!-- Tombol Sheet Pengaturan Notifikasi Sholat -->
+          <button type="button" onclick="showNotifSheet()" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white/90 transition-all flex items-center justify-center" aria-label="Pengaturan Notifikasi Sholat" title="Pengaturan Notifikasi">
+            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
             </svg>
+          </button>
+        </div>
 
-            <!-- CELESTIAL SUN/MOON OVERLAY (100% PURE CIRCLE - ZERO GEPENG!) -->
-            <div id="celestial-plane-w" class="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
-              <div id="celestial-body-w" class="absolute will-change-transform -translate-x-1/2 -translate-y-1/2" style="left: 88px; top: 38px;">
-                <!-- Ambient Soft Bloom Halo -->
-                <div id="orb-glow-w" class="w-12 h-12 rounded-full absolute -inset-3 pointer-events-none" style="background: radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, rgba(245, 158, 11, 0.25) 55%, transparent 75%); filter: blur(4px);"></div>
-                <!-- 100% Round Concentric Celestial Disc -->
-                <div id="orb-disc-w" class="w-6 h-6 rounded-full relative shadow-md" style="background: radial-gradient(circle at 35% 35%, #FEF08A 0%, #FBBF24 50%, #F59E0B 80%, #D97706 100%); box-shadow: 0 0 10px rgba(251, 191, 36, 0.8), 0 0 20px rgba(245, 158, 11, 0.4);"></div>
-              </div>
-            </div>
-
-            <!-- LAYER GELAP / DARKENED GLASS SCRIM (TULISAN PUTIH BISA TERBACA JELAS!) -->
-            <div class="absolute inset-0 bg-slate-950/45 backdrop-blur-[1.5px] pointer-events-none z-10 transition-colors duration-500"></div>
-
-            <!-- Konten Cuaca Lengkap di Atas Layer Gelap (Z-Index 20) -->
-            <div class="relative z-20 flex flex-col justify-between h-full">
-              <!-- Top Row: CUACA + Logo Cuaca Dinamis + Tombol Tipis Chevron '<' (saat 2x2) / '✕' (saat 4x2) -->
-              <div class="flex justify-between items-center">
-                <div class="flex items-center gap-1.5">
-                  <span class="text-[8px] font-black tracking-widest text-white/80 uppercase">CUACA</span>
-                  <div id="weather-icon-container" class="w-4 h-4 flex items-center justify-center">
-                    <svg id="weather-icon-svg" class="w-3.5 h-3.5 text-amber-300 drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1s-1-.45-1-1V3c0-.55.45-1 1-1zm0 18c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1s-1-.45-1-1v-2c0-.55.45-1 1-1zm10-9c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1s.45-1 1-1h2c.55 0 1 .45 1 1zM5 12c0 .55-.45 1-1 1H2c-.55 0-1-.45-1-1s.45-1 1-1h2c.55 0 1 .45 1 1z"/>
-                    </svg>
-                  </div>
-                </div>
-                
-                <div class="flex items-center gap-1.5">
-                  <div id="weather-feels-box" class="hidden text-[8px] text-white/90 font-bold bg-white/15 px-1.5 py-0.5 rounded-full">
-                    Terasa 34°C
-                  </div>
-                  <!-- Directional Arrow Button Cuaca: Thin Vector Chevron '<' in 2x2, Thin '✕' in 4x2 -->
-                  <button id="btn-toggle-weather-mode" onclick="toggleWeatherExpand(event)" class="w-6 h-6 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 active:scale-90 text-white transition-all flex items-center justify-center shadow-xs flex-shrink-0 cursor-pointer" title="Perluas / Tutup">
-                    <span id="weather-arrow-icon" class="flex items-center justify-center">
-                      <svg class="w-3.5 h-3.5 text-white/95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Main Weather Temp & Condition -->
-              <div class="py-0.5" onclick="toggleWeatherExpand(event)">
-                <div class="flex items-baseline gap-1.5">
-                  <span id="weather-temp" class="text-2xl font-black text-white tracking-tight drop-shadow-md">31°C</span>
-                  <span id="weather-condition" class="text-[9px] font-extrabold text-sky-200 drop-shadow-xs">Cerah Berawan</span>
-                </div>
-              </div>
-
-              <!-- ================= VIEW KETIKA 2x2 (RINGKAS) ================= -->
-              <div id="weather-compact-view" onclick="toggleWeatherExpand(event)" class="flex flex-col gap-1 transition-opacity duration-300">
-                <!-- 2x2 Grid Pills Rapi Tanpa Tabrakan / Offside! -->
-                <div class="grid grid-cols-2 gap-1 text-[8.5px] font-bold text-white/95">
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-white/70">💧 Lembap</span>
-                    <strong id="weather-humidity-2x2" class="text-white font-extrabold">68%</strong>
-                  </div>
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-cyan-300">🌧️ Hujan</span>
-                    <strong id="weather-rain-prob-2x2" class="text-cyan-200 font-extrabold">15%</strong>
-                  </div>
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-emerald-300">💨 Angin</span>
-                    <strong id="weather-wind-2x2" class="text-white font-extrabold">12km/j</strong>
-                  </div>
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-amber-300">☀️ UV</span>
-                    <strong id="weather-uv-2x2" class="text-amber-300 font-extrabold">6</strong>
-                  </div>
-                </div>
-
-                <!-- Bottom strip -->
-                <div class="flex items-center justify-between pt-1 border-t border-white/15 text-[8.5px] font-bold text-white/90">
-                  <div class="flex items-center gap-1.5">
-                    <span>12:00 <strong class="text-amber-200">32°</strong></span>
-                    <span class="text-white/40">·</span>
-                    <span>15:00 <strong class="text-orange-200">30°</strong></span>
-                  </div>
-                  <span class="text-white/70 text-[8px] font-medium">Perkiraan Cuaca</span>
-                </div>
-              </div>
-
-              <!-- ================= VIEW KETIKA 4x2 (EXPANDED FULL-WIDTH HORIZONTAL) ================= -->
-              <div id="weather-expanded-view" class="hidden flex-col gap-1 pt-1 border-t border-white/15 transition-opacity duration-300">
-                <!-- 1 Row of 4 Metric Pills across full 4x2 width (Saves 25px height, ZERO KEPOTONG!) -->
-                <div class="grid grid-cols-4 gap-1 text-[8.5px] font-bold text-white/95">
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-white/70">💧 Lembap</span>
-                    <strong id="weather-humidity" class="text-white font-extrabold">68%</strong>
-                  </div>
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-cyan-300">🌧️ Hujan</span>
-                    <strong id="weather-rain-prob" class="text-cyan-200 font-extrabold">15%</strong>
-                  </div>
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-emerald-300">💨 Angin</span>
-                    <strong id="weather-wind" class="text-white font-extrabold">12km/j</strong>
-                  </div>
-                  <div class="bg-black/30 backdrop-blur-xs px-1.5 py-0.5 rounded-md flex items-center justify-between border border-white/10">
-                    <span class="text-amber-300">☀️ UV</span>
-                    <strong id="weather-uv" class="text-amber-300 font-extrabold">6</strong>
-                  </div>
-                </div>
-
-                <!-- 6 Jam Prakiraan Horisontal Berjajar Penuh -->
-                <div class="grid grid-cols-6 gap-1 text-center text-[8.5px] font-bold">
-                  <div class="bg-white/10 py-0.5 px-0.5 rounded-lg">
-                    <span class="text-white/60 block text-[7.5px]">11:00</span>
-                    <span class="text-[11px] leading-tight">🌤️</span>
-                    <span class="text-amber-200 block text-[9.5px]">31°</span>
-                  </div>
-                  <div class="bg-white/10 py-0.5 px-0.5 rounded-lg">
-                    <span class="text-white/60 block text-[7.5px]">12:00</span>
-                    <span class="text-[11px] leading-tight">☀️</span>
-                    <span class="text-amber-300 block text-[9.5px]">32°</span>
-                  </div>
-                  <div class="bg-white/10 py-0.5 px-0.5 rounded-lg">
-                    <span class="text-white/60 block text-[7.5px]">13:00</span>
-                    <span class="text-[11px] leading-tight">☀️</span>
-                    <span class="text-amber-300 block text-[9.5px]">33°</span>
-                  </div>
-                  <div class="bg-white/10 py-0.5 px-0.5 rounded-lg">
-                    <span class="text-white/60 block text-[7.5px]">14:00</span>
-                    <span class="text-[11px] leading-tight">⛅</span>
-                    <span class="text-white block text-[9.5px]">31°</span>
-                  </div>
-                  <div class="bg-cyan-900/40 border border-cyan-400/40 py-0.5 px-0.5 rounded-lg text-cyan-200">
-                    <span class="text-cyan-200/70 block text-[7.5px]">15:00</span>
-                    <span class="text-[11px] leading-tight">🌧️</span>
-                    <span class="block text-[9.5px]">29°</span>
-                  </div>
-                  <div class="bg-white/10 py-0.5 px-0.5 rounded-lg">
-                    <span class="text-white/60 block text-[7.5px]">16:00</span>
-                    <span class="text-[11px] leading-tight">🌦️</span>
-                    <span class="text-cyan-200 block text-[9.5px]">28°</span>
-                  </div>
-                </div>
-
-                <!-- Baris Extra Metrik Tanpa Tombol Kembali (100% VISIBLE, NEVER CUT OFF!) -->
-                <div class="flex items-center justify-center gap-3 text-[8.5px] px-3 py-0.5 bg-black/35 backdrop-blur-xs rounded-full text-white/90 mx-auto border border-white/10">
-                  <span>Tekanan <strong class="text-white">1012 hPa</strong></span>
-                  <span class="text-white/30">·</span>
-                  <span>AQI <strong class="text-emerald-300">42 Baik</strong></span>
-                </div>
-              </div>
-
+        <!-- Hero Sholat Berikutnya + Hitung Mundur -->
+        <div class="py-3.5 flex items-baseline justify-between">
+          <div>
+            <div id="prayer-hero-title" class="text-xs font-semibold text-white/70 uppercase tracking-wider">Sholat Berikutnya</div>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span id="next-prayer-name" class="text-2xl font-black text-white tracking-tight">Dzuhur</span>
+              <span id="next-prayer-time" class="text-2xl font-black text-white tracking-tight tabular-nums">11:23</span>
             </div>
           </div>
-
+          <div class="text-right">
+            <span id="next-prayer-countdown" class="inline-block bg-white/15 text-white text-xs font-bold px-3 py-1 rounded-full tabular-nums border border-white/10">
+              3 j 9 m lagi
+            </span>
+          </div>
         </div>
 
-      <!-- ==================== MID: 2x2 PILAR HARIAN (CRAFTED TELEMETRY DECK) ==================== -->
-      <div>
-        <div class="flex justify-between items-center mb-2 px-1">
-          <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6B7280]">Pilar Harian</span>
+        <!-- Progress Bar Waktu Menuju Sholat Berikutnya -->
+        <div class="w-full bg-white/15 rounded-full h-1.5 overflow-hidden mb-3.5" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+          <div id="prayer-progress-bar" class="bg-[#F5A623] h-full rounded-full transition-all duration-300" style="width: 65%;"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2.5">
+        <!-- Baris 5 Sholat Wajib Sejajar (5 Kolom Bersih) -->
+        <div class="grid grid-cols-5 gap-1 text-center" id="fardhu-row">
           
-          <!-- KARTU 1: WORKOUT (Fokus Sesi & Set Tracker) -->
-          <div class="bg-white border border-slate-200/90 hover:border-amber-400/70 rounded-2xl p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between group">
-            <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#6B7280]">Workout</span>
-                <span id="workout-set-badge" class="text-[9.5px] font-black text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">3 / 4 Selesai</span>
-              </div>
-              
-              <div class="text-[13px] font-black text-[#143E48] tracking-tight leading-snug">Full Body Focus</div>
-              <div class="text-[10.5px] text-slate-500 font-medium mt-0.5">Pull-up · Push-up · Core</div>
-              
-<!-- Visual Progress Track (Sleek & User-Friendly, tanpa tombol S1-S4 yang membingungkan) -->
-              <div class="flex gap-1 my-2.5" id="workout-progress-track" title="3 dari 4 Set Tuntas">
-                <span class="flex-1 h-2 rounded-full bg-amber-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-amber-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-amber-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-slate-200 transition-colors"></span>
-              </div>
-            </div>
-
-            <!-- Action: Selesai Sesi / Mulai -->
-            <button onclick="startWorkoutSession()" class="w-full py-1.5 bg-slate-50 hover:bg-amber-500 hover:text-white border border-slate-200 text-[#143E48] text-[11px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1 cursor-pointer shadow-2xs">
-              <span>Catat Sesi</span>
-              <span class="text-xs">→</span>
-            </button>
+          <div id="slot-subuh" class="py-1 px-0.5 rounded-lg bg-white/5 transition-all">
+            <div class="text-[9px] text-white/70 font-medium">Subuh</div>
+            <div class="text-[11px] font-bold text-white tabular-nums">03:47</div>
           </div>
 
-          <!-- KARTU 2: HIDRASI (Pencatat Asupan Air) -->
-          <div class="bg-white border border-slate-200/90 hover:border-cyan-400/70 rounded-2xl p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between group">
-            <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#6B7280]">Air Minum</span>
-                <span id="water-percent" class="text-[9.5px] font-black text-cyan-800 bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full">60%</span>
-              </div>
-              
-              <div class="flex items-baseline gap-1">
-                <span id="water-text" class="text-xl font-black text-[#143E48] tracking-tight tabular-nums">1.500</span>
-                <span class="text-[10.5px] font-bold text-slate-400">/ 2.500 ml</span>
-              </div>
-              <div class="text-[10.5px] text-slate-500 font-medium mt-0.5">Target 2.5L · Galon: ~6 Hari</div>
-              
-              <!-- Precision Segmented Water Glass Track (10 segments) -->
-              <div class="flex gap-1 my-2.5" id="water-glass-segments">
-                <span class="flex-1 h-2 rounded-full bg-cyan-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-cyan-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-cyan-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-cyan-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-cyan-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-cyan-500 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-slate-200 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-slate-200 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-slate-200 transition-colors"></span>
-                <span class="flex-1 h-2 rounded-full bg-slate-200 transition-colors"></span>
-              </div>
-            </div>
-
-            <!-- Quick Add Buttons: +250ml & +600ml -->
-            <div class="grid grid-cols-2 gap-1.5">
-              <button onclick="addWater(250)" class="py-1.5 bg-slate-50 hover:bg-cyan-500 hover:text-white border border-slate-200 text-[#143E48] text-[10.5px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center cursor-pointer shadow-2xs" title="+250ml Gelas Kos">
-                +250ml Gelas
-              </button>
-              <button onclick="addWater(600)" class="py-1.5 bg-slate-50 hover:bg-cyan-500 hover:text-white border border-slate-200 text-[#143E48] text-[10.5px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center cursor-pointer shadow-2xs" title="+600ml Tumbler">
-                +600ml Tumbler
-              </button>
-            </div>
+          <div id="slot-dzuhur" class="py-1 px-0.5 rounded-lg bg-white text-[#143E48] font-bold shadow-xs transition-all">
+            <div class="text-[9px] font-extrabold text-[#143E48]">Dzuhur</div>
+            <div class="text-[11px] font-black text-[#143E48] tabular-nums">11:23</div>
           </div>
 
-          <!-- KARTU 3: KEUANGAN (Budget Harian & Pengeluaran) -->
-          <div class="bg-white border border-slate-200/90 hover:border-emerald-400/70 rounded-2xl p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between group">
-            <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#6B7280]">Keuangan</span>
-                <span id="expense-badge" class="text-[9.5px] font-black text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">Jatah Aman</span>
-              </div>
-              
-              <div class="flex items-baseline gap-1">
-                <span id="expense-text" class="text-xl font-black text-[#143E48] tracking-tight tabular-nums">Rp 44rb</span>
-                <span class="text-[10.5px] font-bold text-slate-400">/ hari</span>
-              </div>
-              <div class="text-[10.5px] text-slate-500 font-medium mt-0.5" id="monthly-budget-text">Sisa Bln: Rp 750.000</div>
-              
-              <!-- Clean Minimal Budget Health Bar -->
-              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden my-2.5 border border-slate-200/60">
-                <div id="budget-progress-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 100%;"></div>
-              </div>
-            </div>
-
-            <!-- Quick Expense Record Action -->
-            <button onclick="quickExpenseModal()" class="w-full py-1.5 bg-slate-50 hover:bg-emerald-500 hover:text-white border border-slate-200 text-[#143E48] text-[11px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1 cursor-pointer shadow-2xs">
-              <span class="text-xs font-black text-emerald-600 group-hover:text-white">+</span>
-              <span>Catat Uang</span>
-            </button>
+          <div id="slot-ashar" class="py-1 px-0.5 rounded-lg bg-white/5 transition-all">
+            <div class="text-[9px] text-white/70 font-medium">Ashar</div>
+            <div class="text-[11px] font-bold text-white tabular-nums">14:45</div>
           </div>
 
-          <!-- KARTU 4: STUDY & FOKUS (Timer Pomodoro & Target Belajar) -->
-          <div class="bg-white border border-slate-200/90 hover:border-teal-400/70 rounded-2xl p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between group">
-            <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#6B7280]">Study & Fokus</span>
-                <span id="study-status-badge" class="text-[9.5px] font-black text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full">0 Sesi</span>
-              </div>
-              
-              <div class="flex items-baseline gap-1">
-                <span id="study-minutes-text" class="text-xl font-black text-[#143E48] tracking-tight tabular-nums">0</span>
-                <span class="text-[10.5px] font-bold text-slate-400">/ 50 mnt</span>
-              </div>
-              <div class="text-[10.5px] text-slate-500 font-medium mt-0.5">Target Fokus Harian</div>
-              
-              <!-- Quick Duration Chips: 15m, 25m, 50m (From ui_study_new.png) -->
-              <div class="grid grid-cols-3 gap-1 my-2.5" id="study-duration-chips">
-                <button type="button" onclick="selectStudyPreset(15)" class="study-chip py-0.5 rounded-md text-center font-bold text-[9.5px] transition-all bg-slate-100 hover:bg-teal-50 text-slate-600 hover:text-teal-700 border border-slate-200/80 cursor-pointer">15m</button>
-                <button type="button" onclick="selectStudyPreset(25)" class="study-chip py-0.5 rounded-md text-center font-black text-[9.5px] transition-all bg-teal-600 text-white shadow-2xs cursor-pointer">25m</button>
-                <button type="button" onclick="selectStudyPreset(50)" class="study-chip py-0.5 rounded-md text-center font-bold text-[9.5px] transition-all bg-slate-100 hover:bg-teal-50 text-slate-600 hover:text-teal-700 border border-slate-200/80 cursor-pointer">50m</button>
-              </div>
-            </div>
+          <div id="slot-maghrib" class="py-1 px-0.5 rounded-lg bg-white/5 transition-all">
+            <div class="text-[9px] text-white/70 font-medium">Maghrib</div>
+            <div class="text-[11px] font-bold text-white tabular-nums">17:37</div>
+          </div>
 
-            <!-- Action: Mulai Sesi Fokus -->
-            <button id="btn-study-action" onclick="toggleStudySession()" class="w-full py-1.5 bg-slate-50 hover:bg-teal-600 hover:text-white border border-slate-200 text-[#143E48] text-[11px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1 cursor-pointer shadow-2xs">
-              <span id="study-btn-icon">▷</span>
-              <span id="study-btn-label">Mulai Fokus (25m)</span>
-            </button>
+          <div id="slot-isya" class="py-1 px-0.5 rounded-lg bg-white/5 transition-all">
+            <div class="text-[9px] text-white/70 font-medium">Isya</div>
+            <div class="text-[11px] font-bold text-white tabular-nums">18:51</div>
           </div>
 
         </div>
 
-        <!-- ================= MY TASKS SECTION (FLOATING CARDS - USER REFERENCE SPEC) ================= -->
-        <div class="mt-4">
-          
-          <!-- Section Header: My Tasks + Progress + See All > -->
-          <div class="flex justify-between items-center mb-2.5 px-1">
-            <div class="flex items-center gap-2">
-              <h2 class="text-base font-black text-[#143E48] tracking-tight">My Tasks</h2>
-              <span id="task-progress-badge" class="text-[10px] font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-2 py-0.5 rounded-full shadow-2xs">1 / 4 Selesai</span>
+        <!-- Collapsible Jadwal Sunnah (Imsak, Terbit, Dhuha) -->
+        <div class="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px]">
+          <span class="text-white/60">Jadwal Sunnah:</span>
+          <button type="button" onclick="toggleSunnahStrip()" id="sunnah-toggle-btn" class="text-white/80 hover:text-white font-medium flex items-center gap-1 transition-colors">
+            <span>Imsak 03:37 · Terbit 05:07 · Dhuha 05:27</span>
+            <span id="sunnah-chevron" class="text-[9px]">▾</span>
+          </button>
+        </div>
+
+        <div id="sunnah-detail-panel" class="hidden mt-2 pt-2 border-t border-white/10 grid grid-cols-3 gap-1 text-center text-[10px]">
+          <div class="bg-black/20 rounded py-1">
+            <span class="text-white/60 block text-[8px]">Imsak</span>
+            <span class="font-bold tabular-nums">03:37</span>
+          </div>
+          <div class="bg-black/20 rounded py-1">
+            <span class="text-white/60 block text-[8px]">Terbit</span>
+            <span class="font-bold tabular-nums">05:07</span>
+          </div>
+          <div class="bg-black/20 rounded py-1">
+            <span class="text-white/60 block text-[8px]">Dhuha</span>
+            <span class="font-bold tabular-nums">05:27</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= 3. KARTU "HARI INI" TERPADU (TARGET & TO-DO) ================= -->
+      <!-- Menggabungkan Kebiasaan & Tugas ke dalam 1 Kartu Putih Terstruktur -->
+      <section class="bg-white border border-[#E8ECEF] rounded-[20px] p-4 shadow-xs" aria-labelledby="today-card-heading">
+        
+        <!-- Header Kartu: Label + Counter Terpadu + Progress Bar Tipis Amber -->
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <h2 id="today-card-heading" class="text-xs font-extrabold uppercase tracking-wider text-[#143E48]">Hari Ini</h2>
+            <span class="text-[11px] text-[#6B7280] font-medium">Target & Rutinitas</span>
+          </div>
+          <span id="today-progress-counter" class="text-xs font-black text-[#143E48] tabular-nums">3 / 6 Selesai</span>
+        </div>
+
+        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden mb-3.5">
+          <div id="today-progress-bar" class="bg-[#F5A623] h-full rounded-full transition-all duration-300" style="width: 50%;"></div>
+        </div>
+
+        <!-- SUB-BAGIAN 1: KEBIASAAN HARIAN -->
+        <div class="space-y-2 mb-3.5">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#6B7280]">Kebiasaan Pokok</div>
+
+          <!-- Kebiasaan 1: Makan Teratur -->
+          <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="toggleItemCheck(this, 'habit')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-[#F5A623] border-transparent text-[#143E48]" aria-label="Tandai Makan Teratur selesai">
+                <svg class="w-3.5 h-3.5 stroke-current stroke-3" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </button>
+              <div>
+                <div class="text-xs font-bold text-[#143E48] line-through opacity-70 item-title">Makan teratur</div>
+                <div class="text-[10.5px] text-[#6B7280]">Sarapan, siang, malam</div>
+              </div>
             </div>
-            <button onclick="openPlanningPage()" class="text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-0.5 transition-colors cursor-pointer group" title="Buka Halaman Planning & To-Do List Lengkap">
-              <span>See All</span>
-              <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
+            <span class="text-[10.5px] font-semibold text-[#6B7280]">3 kali</span>
+          </div>
+
+          <!-- Kebiasaan 2: Booster BB -->
+          <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="toggleItemCheck(this, 'habit')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-[#F5A623] border-transparent text-[#143E48]" aria-label="Tandai Booster BB selesai">
+                <svg class="w-3.5 h-3.5 stroke-current stroke-3" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </button>
+              <div>
+                <div class="text-xs font-bold text-[#143E48] line-through opacity-70 item-title">Booster BB</div>
+                <div class="text-[10.5px] text-[#6B7280]">Telur, susu, pisang, madu</div>
+              </div>
+            </div>
+            <span class="text-[10.5px] font-semibold text-[#6B7280]">+500 kkal</span>
+          </div>
+
+          <!-- Kebiasaan 3: Air Galon (2,5L) -->
+          <div class="flex items-center justify-between py-1.5">
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="toggleItemCheck(this, 'habit')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-white text-transparent hover:bg-slate-50" aria-label="Tandai Air Galon selesai">
+                <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              </button>
+              <div>
+                <div class="text-xs font-bold text-[#143E48] item-title">Air galon 2,5 L</div>
+                <div class="text-[10.5px] text-[#6B7280]" id="water-intake-label">1.500 / 2.500 ml (~6 hari galon)</div>
+              </div>
+            </div>
+            <!-- Quick Add Mini Pill -->
+            <button type="button" onclick="addWaterInline(250)" class="text-[10px] font-bold text-[#143E48] bg-slate-100 hover:bg-[#F5A623] hover:text-white px-2 py-0.5 rounded-md transition-colors" title="Tambah 250ml">
+              +250ml
+            </button>
+          </div>
+        </div>
+
+        <!-- Garis Pemisah Halus Antar Sub-bagian -->
+        <div class="h-px bg-[#E8ECEF] my-3"></div>
+
+        <!-- SUB-BAGIAN 2: TUGAS & TO-DO HARIAN DENGAN ALARM NYATA -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#6B7280]">Tugas & To-Do Terjadwal</span>
+            <button type="button" onclick="promptNewTask()" class="text-[10.5px] font-bold text-[#143E48] hover:underline">
+              + Tambah Tugas
             </button>
           </div>
 
-          <!-- Task Items List: Individual Floating Rounded Cards (Benchmark Reference Image) -->
-          <div class="space-y-2.5" id="task-items-container">
+          <div id="todo-list-container" class="space-y-1.5">
             
-            <!-- Task 1: Checked / Selesai (Design new UI screens) -->
-            <div class="task-card flex items-center justify-between p-3.5 rounded-[22px] bg-white border border-slate-100 shadow-[0_3px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all group relative">
-              <div class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer" onclick="toggleTaskCard(this)">
-                <!-- Circular Checkbox: Checked State (Solid Indigo Circle with White Checkmark) -->
-                <button type="button" aria-label="Status tugas" class="task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all bg-[#5B5FF4] border border-transparent shadow-xs text-white">
-                  <svg class="w-3.5 h-3.5 stroke-current stroke-3" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
+            <!-- To-Do 1: Bangun Subuh / Tahajjud (Terhubung Layar Alarm) -->
+            <div class="todo-row flex items-center justify-between py-2 px-2.5 rounded-xl hover:bg-slate-50 transition-colors">
+              <div class="flex items-center gap-3 min-w-0">
+                <button type="button" onclick="toggleItemCheck(this, 'task')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-[#F5A623] border-transparent text-[#143E48]" aria-label="Tandai Bangun selesai">
+                  <svg class="w-3.5 h-3.5 stroke-current stroke-3" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 </button>
-                <div class="flex-1 min-w-0">
-                  <div class="task-title text-[13px] font-bold text-slate-400 line-through truncate transition-all">
-                    Design new UI screens
-                  </div>
-                  <div class="task-subtitle text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
-                    <span>Today, 10:00 AM</span>
-                    <span class="text-slate-300">·</span>
-                    <span class="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100">
-                      <svg class="w-2.5 h-2.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                      <span>04:15 Alarm</span>
-                    </span>
-                  </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-[#143E48] line-through opacity-70 truncate item-title">Bangun (kalo bisa tahajjud)</div>
+                  <div class="text-[10px] text-[#6B7280]">Rutinitas fajar harian</div>
                 </div>
               </div>
-              <!-- 3-Dots Options Menu -->
-              <div class="relative flex-shrink-0 ml-2">
-                <button onclick="toggleTaskMenu(event, this)" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer" title="Opsi Tugas">
-                  <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/></svg>
-                </button>
-                <div class="task-dropdown-menu hidden absolute right-0 top-8 z-30 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 w-44 transition-all">
-                  <button onclick="taskAction(event, this, 'alarm')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Setel Alarm</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'priority')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                    <span>Tandai Prioritas</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'edit')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    <span>Edit Nama</span>
-                  </button>
-                  <div class="h-px bg-slate-100 my-1"></div>
-                  <button onclick="taskAction(event, this, 'delete')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    <span>Hapus</span>
-                  </button>
-                </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <span class="text-[10.5px] font-bold text-[#B45309] bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded tabular-nums flex items-center gap-1">
+                  <svg class="w-3 h-3 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>04:15</span>
+                </span>
               </div>
             </div>
 
-            <!-- Task 2: Unchecked / Belum Selesai (Workout) -->
-            <div class="task-card flex items-center justify-between p-3.5 rounded-[22px] bg-white border border-slate-100 shadow-[0_3px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all group relative">
-              <div class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer" onclick="toggleTaskCard(this)">
-                <!-- Circular Checkbox: Unchecked State (Hollow Outline Circle) -->
-                <button type="button" aria-label="Status tugas" class="task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all border-2 border-slate-300 bg-white group-hover:border-indigo-400 text-transparent">
-                  <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
+            <!-- To-Do 2: Latihan Fisik Pull-up / Push-up -->
+            <div class="todo-row flex items-center justify-between py-2 px-2.5 rounded-xl hover:bg-slate-50 transition-colors">
+              <div class="flex items-center gap-3 min-w-0">
+                <button type="button" onclick="toggleItemCheck(this, 'task')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-white text-transparent hover:bg-slate-50" aria-label="Tandai Workout selesai">
+                  <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 </button>
-                <div class="flex-1 min-w-0">
-                  <div class="task-title text-[13px] font-bold text-slate-800 truncate transition-all">
-                    Workout
-                  </div>
-                  <div class="task-subtitle text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
-                    <span>Today, 6:00 PM</span>
-                    <span class="text-slate-300">·</span>
-                    <span class="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
-                      <span>Fisik Full Body</span>
-                    </span>
-                  </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-[#143E48] truncate item-title">Workout Full Body (Set 3/4)</div>
+                  <div class="text-[10px] text-[#6B7280]">Pull-up, push-up, core</div>
                 </div>
               </div>
-              <!-- 3-Dots Options Menu -->
-              <div class="relative flex-shrink-0 ml-2">
-                <button onclick="toggleTaskMenu(event, this)" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer" title="Opsi Tugas">
-                  <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/></svg>
-                </button>
-                <div class="task-dropdown-menu hidden absolute right-0 top-8 z-30 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 w-44 transition-all">
-                  <button onclick="taskAction(event, this, 'alarm')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Setel Alarm</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'priority')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                    <span>Tandai Prioritas</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'edit')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    <span>Edit Nama</span>
-                  </button>
-                  <div class="h-px bg-slate-100 my-1"></div>
-                  <button onclick="taskAction(event, this, 'delete')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    <span>Hapus</span>
-                  </button>
-                </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <span class="text-[10.5px] font-bold text-[#143E48] bg-slate-100 px-2 py-0.5 rounded tabular-nums flex items-center gap-1">
+                  <svg class="w-3 h-3 fill-none stroke-current stroke-2 text-[#6B7280]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>16:30</span>
+                </span>
               </div>
             </div>
 
-            <!-- Task 3: Unchecked / Belum Selesai (Read a book) -->
-            <div class="task-card flex items-center justify-between p-3.5 rounded-[22px] bg-white border border-slate-100 shadow-[0_3px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all group relative">
-              <div class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer" onclick="toggleTaskCard(this)">
-                <!-- Circular Checkbox: Unchecked State (Hollow Outline Circle) -->
-                <button type="button" aria-label="Status tugas" class="task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all border-2 border-slate-300 bg-white group-hover:border-indigo-400 text-transparent">
-                  <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
+            <!-- To-Do 3: Sesi Belajar / Fokus Pomodoro -->
+            <div class="todo-row flex items-center justify-between py-2 px-2.5 rounded-xl hover:bg-slate-50 transition-colors">
+              <div class="flex items-center gap-3 min-w-0">
+                <button type="button" onclick="toggleItemCheck(this, 'task')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-white text-transparent hover:bg-slate-50" aria-label="Tandai Sesi Fokus selesai">
+                  <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 </button>
-                <div class="flex-1 min-w-0">
-                  <div class="task-title text-[13px] font-bold text-slate-800 truncate transition-all">
-                    Read a book
-                  </div>
-                  <div class="task-subtitle text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
-                    <span>Today, 8:00 PM</span>
-                    <span class="text-slate-300">·</span>
-                    <span class="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
-                      <span>Edukasi & Mindset</span>
-                    </span>
-                  </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-[#143E48] truncate item-title">Fokus Pomodoro (Target 50 mnt)</div>
+                  <div class="text-[10px] text-[#6B7280]">Selesaikan materi & evaluasi</div>
                 </div>
               </div>
-              <!-- 3-Dots Options Menu -->
-              <div class="relative flex-shrink-0 ml-2">
-                <button onclick="toggleTaskMenu(event, this)" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer" title="Opsi Tugas">
-                  <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/></svg>
-                </button>
-                <div class="task-dropdown-menu hidden absolute right-0 top-8 z-30 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 w-44 transition-all">
-                  <button onclick="taskAction(event, this, 'alarm')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Setel Alarm</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'priority')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                    <span>Tandai Prioritas</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'edit')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    <span>Edit Nama</span>
-                  </button>
-                  <div class="h-px bg-slate-100 my-1"></div>
-                  <button onclick="taskAction(event, this, 'delete')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    <span>Hapus</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Task 4: Unchecked / Belum Selesai (Review Architecture & Flutter Build) -->
-            <div class="task-card flex items-center justify-between p-3.5 rounded-[22px] bg-white border border-slate-100 shadow-[0_3px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all group relative">
-              <div class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer" onclick="toggleTaskCard(this)">
-                <!-- Circular Checkbox: Unchecked State -->
-                <button type="button" aria-label="Status tugas" class="task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all border-2 border-slate-300 bg-white group-hover:border-indigo-400 text-transparent">
-                  <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </button>
-                <div class="flex-1 min-w-0">
-                  <div class="task-title text-[13px] font-bold text-slate-800 truncate transition-all">
-                    Review Architecture & Flutter Build
-                  </div>
-                  <div class="task-subtitle text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
-                    <span>Today, 9:30 PM</span>
-                    <span class="text-slate-300">·</span>
-                    <span class="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-sky-700 bg-sky-50 px-1.5 py-0.2 rounded border border-sky-200">
-                      <span>Fokus Coding</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <!-- 3-Dots Options Menu -->
-              <div class="relative flex-shrink-0 ml-2">
-                <button onclick="toggleTaskMenu(event, this)" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer" title="Opsi Tugas">
-                  <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/></svg>
-                </button>
-                <div class="task-dropdown-menu hidden absolute right-0 top-8 z-30 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 w-44 transition-all">
-                  <button onclick="taskAction(event, this, 'alarm')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Setel Alarm</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'priority')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                    <span>Tandai Prioritas</span>
-                  </button>
-                  <button onclick="taskAction(event, this, 'edit')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    <span>Edit Nama</span>
-                  </button>
-                  <div class="h-px bg-slate-100 my-1"></div>
-                  <button onclick="taskAction(event, this, 'delete')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    <span>Hapus</span>
-                  </button>
-                </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <span class="text-[10.5px] font-bold text-[#143E48] bg-slate-100 px-2 py-0.5 rounded tabular-nums flex items-center gap-1">
+                  <svg class="w-3 h-3 fill-none stroke-current stroke-2 text-[#6B7280]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>19:30</span>
+                </span>
               </div>
             </div>
 
           </div>
-
-          <!-- Bottom Action: Quick Add Task (Dashed Pill Button) -->
-          <div class="mt-2.5">
-            <button onclick="quickAddTask()" class="w-full py-2 border border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/40 rounded-[18px] text-xs font-bold text-slate-500 hover:text-indigo-600 transition-all flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer shadow-2xs">
-              <span class="text-sm font-bold text-slate-400">+</span>
-              <span>Tambah tugas cepat</span>
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ==================== LOW: RECIPE & HEATMAP ==================== -->
-      <div>
-        <div class="flex justify-between items-center mb-2 px-1">
-          <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6B7280]">Resep Makanan Hemat</span>
-          <span id="recipe-packet-indicator" class="text-xs text-amber-700 font-bold">Paket A (Ketuk ganti)</span>
         </div>
 
-        <div onclick="toggleRecipePacket()" class="bg-white border border-slate-200/90 hover:border-amber-300 rounded-2xl p-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-md cursor-pointer transition-all group active:scale-[0.99]">
-          <div class="flex gap-3">
-            <div id="recipe-badge-box" class="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200/80 flex flex-col items-center justify-center flex-shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-              <span class="text-[9px] font-black text-amber-800 tracking-wider">PAKET</span>
-              <span id="recipe-badge-letter" class="text-xl font-black text-amber-700 -mt-0.5 leading-none">A</span>
+      </section>
+
+      <!-- ================= 4. TELEMETRI RINGKAS: KEUANGAN & RESEP HEMAT ================= -->
+      <section class="grid grid-cols-2 gap-3" aria-label="Keuangan dan Menu Harian">
+        
+        <!-- Kartu Keuangan Harian -->
+        <div class="bg-white border border-[#E8ECEF] rounded-[18px] p-3 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-[#6B7280]">Jatah Uang</span>
+              <span id="budget-status-chip" class="text-[9.5px] font-bold text-[#143E48] bg-slate-100 px-1.5 py-0.2 rounded">Aman</span>
             </div>
-            <div class="flex-1">
-              <div id="recipe-subtitle" class="text-[10px] font-extrabold text-[#6B7280] uppercase tracking-wider">Pola Hemat Otot (Kost)</div>
-              <h3 id="recipe-title" class="text-xs font-black text-[#143E48] leading-tight mt-0.5 group-hover:text-amber-800 transition-colors">Telur 5 + Tempe + Bening Bayam</h3>
-              <p id="recipe-desc" class="text-[11px] text-[#6B7280] mt-1 line-clamp-2">
-                <span class="font-bold text-amber-700">[MC]</span> Nasi + telur 12 mnt + tempe di atas nasi. <span class="font-bold text-cyan-700">[PL]</span> Bening bayam & wortel.
-              </p>
-              <div class="flex items-center gap-2 mt-2 text-[10px] font-bold">
-                <span id="recipe-cost" class="bg-slate-100 text-[#143E48] px-2 py-0.5 rounded-md">Rp 22.500/hr</span>
-                <span id="recipe-prot" class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">61g Prot</span>
-                <span id="recipe-cal" class="text-slate-500">790 kkal</span>
-              </div>
+            <div class="flex items-baseline gap-1 mt-1">
+              <span id="expense-daily-val" class="text-lg font-black text-[#143E48] tabular-nums">Rp 44rb</span>
+              <span class="text-[10px] text-[#6B7280]">/ hari</span>
             </div>
+            <div class="text-[10px] text-[#6B7280] mt-0.5" id="monthly-remain-label">Sisa Bln: Rp 750.000</div>
           </div>
+          <button type="button" onclick="logExpensePrompt()" class="mt-2.5 w-full py-1 text-[10.5px] font-bold text-[#143E48] bg-slate-100 hover:bg-[#F5A623] hover:text-white rounded-lg transition-colors">
+            Catat Pengeluaran
+          </button>
         </div>
 
-        <div class="h-6"></div>
-      </div>
+        <!-- Kartu Resep Hemat (Kost) -->
+        <div class="bg-white border border-[#E8ECEF] rounded-[18px] p-3 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-[#6B7280]">Resep Kost</span>
+              <span id="recipe-code" class="text-[9.5px] font-black text-[#143E48] bg-amber-50 border border-amber-200 px-1.5 py-0.2 rounded">Paket A</span>
+            </div>
+            <div id="recipe-name" class="text-xs font-bold text-[#143E48] leading-tight line-clamp-1 mt-1">Telur 5 + Tempe</div>
+            <div class="text-[10px] text-[#6B7280] mt-0.5">Rp 22.500 · 61g Prot</div>
+          </div>
+          <button type="button" onclick="nextRecipePacket()" class="mt-2.5 w-full py-1 text-[10.5px] font-bold text-[#143E48] bg-slate-100 hover:bg-[#F5A623] hover:text-white rounded-lg transition-colors">
+            Ganti Paket Resep
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Ruang Padding Bawah -->
+      <div class="h-4"></div>
 
     </div>
 
-    <!-- Bottom Navigation Bar (Vector Crisp Minimalist - Tanpa Emoji) -->
-    <div id="bottom-nav-bar" class="bg-white border-t border-[#E8ECEF] px-4 py-2 flex justify-around items-center select-none shadow-lg z-20">
-      <button onclick="selectNavTab(this, 'latihan')" class="nav-item flex flex-col items-center text-[#6B7280] hover:text-[#143E48] transition-colors py-1 px-2 rounded-xl cursor-pointer">
-        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4M6 12h12"/></svg>
-        <span class="text-[10px] font-bold mt-0.5">Latihan</span>
+    <!-- ================= 5. BOTTOM NAVIGATION BAR (VEKTOR BERSIH) ================= -->
+    <nav id="bottom-nav" class="bg-white border-t border-[#E8ECEF] px-3 py-1.5 flex justify-around items-center select-none shadow-md z-20 shrink-0" aria-label="Navigasi Utama">
+      <button type="button" onclick="switchNav(this, 'Latihan')" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#6B7280] hover:text-[#143E48] transition-colors">
+        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4M6 12h12"/></svg>
+        <span class="text-[10px] font-semibold mt-0.5">Latihan</span>
       </button>
-      <button onclick="selectNavTab(this, 'makan')" class="nav-item flex flex-col items-center text-[#6B7280] hover:text-[#143E48] transition-colors py-1 px-2 rounded-xl cursor-pointer">
-        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
-        <span class="text-[10px] font-bold mt-0.5">Makan</span>
+      <button type="button" onclick="switchNav(this, 'Makan')" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#6B7280] hover:text-[#143E48] transition-colors">
+        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+        <span class="text-[10px] font-semibold mt-0.5">Makan</span>
       </button>
-      <button onclick="selectNavTab(this, 'beranda')" class="nav-item flex flex-col items-center text-amber-600 transition-colors py-1 px-2 rounded-xl bg-amber-50 cursor-pointer">
-        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span class="text-[10px] font-extrabold mt-0.5">Beranda</span>
+      <button type="button" onclick="switchNav(this, 'Beranda')" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#143E48] font-bold bg-slate-100 transition-colors" aria-current="page">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span class="text-[10px] font-bold mt-0.5">Beranda</span>
       </button>
-      <button onclick="selectNavTab(this, 'uang')" class="nav-item flex flex-col items-center text-[#6B7280] hover:text-[#143E48] transition-colors py-1 px-2 rounded-xl cursor-pointer">
-        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        <span class="text-[10px] font-bold mt-0.5">Uang</span>
+      <button type="button" onclick="switchNav(this, 'Uang')" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#6B7280] hover:text-[#143E48] transition-colors">
+        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span class="text-[10px] font-semibold mt-0.5">Uang</span>
       </button>
-      <button onclick="selectNavTab(this, 'jadwal')" class="nav-item flex flex-col items-center text-[#6B7280] hover:text-[#143E48] transition-colors py-1 px-2 rounded-xl cursor-pointer">
-        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span class="text-[10px] font-bold mt-0.5">Jadwal</span>
+      <button type="button" onclick="switchNav(this, 'Jadwal')" class="nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#6B7280] hover:text-[#143E48] transition-colors">
+        <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span class="text-[10px] font-semibold mt-0.5">Jadwal</span>
       </button>
+    </nav>
+
+    <!-- Feedback Toast -->
+    <div id="toast" class="opacity-0 pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 z-50 bg-[#143E48] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg transition-opacity duration-200 flex items-center gap-1.5" role="status">
+      <span id="toast-text">Berhasil</span>
     </div>
 
-    <!-- Floating Global Toast Feedback -->
-    <div id="global-toast" class="opacity-0 pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 z-50 bg-[#143E48] text-white text-xs font-bold px-4 py-2 rounded-full shadow-2xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap">
-      <span id="toast-icon">✓</span>
-      <span id="toast-msg">Berhasil disimpan</span>
-    </div>
-
-  </div>
+  </main>
 
   <script>
+    // Jadwal Sholat Realistis Surakarta
+    const prayerSchedule = [
+      { id: 'subuh', name: 'Subuh', min: 227, time: '03:47' },
+      { id: 'dzuhur', name: 'Dzuhur', min: 683, time: '11:23' },
+      { id: 'ashar', name: 'Ashar', min: 885, time: '14:45' },
+      { id: 'maghrib', name: 'Maghrib', min: 1057, time: '17:37' },
+      { id: 'isya', name: 'Isya', min: 1131, time: '18:51' }
+    ];
+
     const slider = document.getElementById('time-slider');
     const timeDisplay = document.getElementById('time-display');
     const statusClock = document.getElementById('status-clock');
-    const greetingText = document.getElementById('greeting-text');
-    const skyPhaseLabel = document.getElementById('sky-phase-label');
-    const skyBadgeIcon = document.getElementById('sky-badge-icon');
-    
-// Dual Bento Hero References (Sholat & Cuaca)
+    const greetingHeading = document.getElementById('greeting-heading');
+    const nextPrayerName = document.getElementById('next-prayer-name');
+    const nextPrayerTime = document.getElementById('next-prayer-time');
+    const nextPrayerCountdown = document.getElementById('next-prayer-countdown');
+    const prayerProgressBar = document.getElementById('prayer-progress-bar');
+    const sliderPhaseLabel = document.getElementById('slider-phase-label');
 
-    // Pengatur Efek Glow Bersih & Gradasi Alami Murni (Tanpa Titik Putih Aneh!)
-    // Helper untuk mengubah gradasi & glow matahari/bulan pada kedua bento (Sholat & Cuaca)
-    function setOrbStyle(stop1, stop2, stop3, stop4, glowMid, glowLarge, borderCol) {
-      ['orb-stop-1-p', 'orb-stop-1-w'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('stop-color', stop1);
-      });
-      ['orb-stop-2-p', 'orb-stop-2-w'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('stop-color', stop2);
-      });
-      ['orb-stop-3-p', 'orb-stop-3-w'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('stop-color', stop3);
-      });
-      ['orb-stop-4-p', 'orb-stop-4-w'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('stop-color', stop4);
-      });
-
-      ['orb-glow-p', 'orb-glow-w'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('fill', glowMid);
-      });
-    }
-
-    // =========================================================================
-    // HORIZONTAL ANIMATION: BENTO 2x2 (50%) -> BENTO 4x2 (100% LEBAR PENUH)
-    // "bukan ke bawah tapi kesamping dan secara animasi cuaca akan tergeser sampai tersembunyi"
-    // =========================================================================
-    
-    // mode: 'split' (keduanya 2x2 sejajar), 'prayer_4x2' (sholat lebar penuh 4x2, cuaca tergeser sembunyi), 'weather_4x2' (cuaca lebar penuh 4x2, sholat tergeser sembunyi)
-    let currentHeroMode = 'split';
-
-    function togglePrayerExpand(e) {
-      if (e) e.stopPropagation();
-      if (currentHeroMode === 'prayer_4x2') {
-        setHeroMode('split');
-      } else {
-        setHeroMode('prayer_4x2');
-      }
-    }
-
-    function toggleWeatherExpand(e) {
-      if (e) e.stopPropagation();
-      if (currentHeroMode === 'weather_4x2') {
-        setHeroMode('split');
-      } else {
-        setHeroMode('weather_4x2');
-      }
-    }
-
-    function collapseHeroTo2x2(e) {
-      if (e) e.stopPropagation();
-      setHeroMode('split');
-    }
-
-    function setHeroMode(mode) {
-      currentHeroMode = mode;
-      const prayerCard = document.getElementById('bento-prayer-card');
-      const weatherCard = document.getElementById('bento-weather-card');
-      
-      const pCompact = document.getElementById('prayer-compact-view');
-      const pExpanded = document.getElementById('prayer-expanded-view');
-      const pArrow = document.getElementById('prayer-arrow-icon');
-
-      const wCompact = document.getElementById('weather-compact-view');
-      const wExpanded = document.getElementById('weather-expanded-view');
-      const wFeels = document.getElementById('weather-feels-box');
-      const wArrow = document.getElementById('weather-arrow-icon');
-
-      const btnModeSplit = document.getElementById('btn-mode-split');
-      const btnModeP4 = document.getElementById('btn-mode-p4');
-      const btnModeW4 = document.getElementById('btn-mode-w4');
-
-      if (btnModeSplit) btnModeSplit.className = mode === 'split' ? 'px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[10px]' : 'px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium text-[10px]';
-      if (btnModeP4) btnModeP4.className = mode === 'prayer_4x2' ? 'px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[10px]' : 'px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium text-[10px]';
-      if (btnModeW4) btnModeW4.className = mode === 'weather_4x2' ? 'px-2 py-0.5 rounded bg-sky-500 text-slate-950 font-bold text-[10px]' : 'px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium text-[10px]';
-
-      if (mode === 'split') {
-        // Keduanya 2x2 berdampingan (50% / 50%)
-        // Sholat di sisi kiri (0px), Cuaca di sisi kanan (calc(50% + 5px))
-        prayerCard.style.left = '0px';
-        prayerCard.style.width = 'calc(50% - 5px)';
-        prayerCard.style.transform = 'translateX(0)';
-        prayerCard.style.opacity = '1';
-        prayerCard.style.pointerEvents = 'auto';
-        prayerCard.style.zIndex = '10';
-
-        weatherCard.style.left = 'calc(50% + 5px)';
-        weatherCard.style.width = 'calc(50% - 5px)';
-        weatherCard.style.transform = 'translateX(0)';
-        weatherCard.style.opacity = '1';
-        weatherCard.style.pointerEvents = 'auto';
-        weatherCard.style.zIndex = '10';
-
-        pCompact.classList.remove('hidden');
-        pExpanded.classList.add('hidden');
-        pExpanded.classList.remove('flex');
-        if (pArrow) pArrow.innerHTML = '<svg class="w-3.5 h-3.5 text-white/95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>'; // Menunjuk kanan untuk melebar
-
-        wCompact.classList.remove('hidden');
-        wExpanded.classList.add('hidden');
-        wExpanded.classList.remove('flex');
-        wFeels.classList.add('hidden');
-        if (wArrow) wArrow.innerHTML = '<svg class="w-3.5 h-3.5 text-white/95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>'; // Menunjuk kiri untuk melebar
-      }
-      else if (mode === 'prayer_4x2') {
-        // Sholat ekspansi melebar penuh 4x2 (100% lebar dari x=0 ke x=100% FLUSH!)
-        // Cuaca tergeser mulus ke kanan (translateX(120%)) sampai tersembunyi
-        prayerCard.style.left = '0px';
-        prayerCard.style.width = '100%';
-        prayerCard.style.transform = 'translateX(0)';
-        prayerCard.style.opacity = '1';
-        prayerCard.style.pointerEvents = 'auto';
-        prayerCard.style.zIndex = '20';
-
-        weatherCard.style.left = 'calc(50% + 5px)';
-        weatherCard.style.width = 'calc(50% - 5px)';
-        weatherCard.style.transform = 'translateX(120%)';
-        weatherCard.style.opacity = '0';
-        weatherCard.style.pointerEvents = 'none';
-        weatherCard.style.zIndex = '5';
-
-        pCompact.classList.add('hidden');
-        pExpanded.classList.remove('hidden');
-        pExpanded.classList.add('flex');
-        if (pArrow) pArrow.innerHTML = '<svg class="w-3.5 h-3.5 text-white/95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'; // Simbol 'x' tipis untuk kembali
-      }
-      else if (mode === 'weather_4x2') {
-        // Cuaca ekspansi melebar penuh 4x2: bergerak mulus meluncur dari sisi kanan ke x=0 dan melebar 100% FLUSH!
-        // Sholat tergeser mulus ke kiri (translateX(-120%)) sampai tersembunyi
-        weatherCard.style.left = '0px';
-        weatherCard.style.width = '100%';
-        weatherCard.style.transform = 'translateX(0)';
-        weatherCard.style.opacity = '1';
-        weatherCard.style.pointerEvents = 'auto';
-        weatherCard.style.zIndex = '20';
-
-        prayerCard.style.left = '0px';
-        prayerCard.style.width = 'calc(50% - 5px)';
-        prayerCard.style.transform = 'translateX(-120%)';
-        prayerCard.style.opacity = '0';
-        prayerCard.style.pointerEvents = 'none';
-        prayerCard.style.zIndex = '5';
-
-        wCompact.classList.add('hidden');
-        wExpanded.classList.remove('hidden');
-        wExpanded.classList.add('flex');
-        wFeels.classList.remove('hidden');
-        if (wArrow) wArrow.innerHTML = '<svg class="w-3.5 h-3.5 text-white/95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'; // Simbol 'x' tipis untuk kembali
-      }
-
-      // Re-trigger visual wushhh smoothly
-      triggerWushhhAnim();
-    }
-
-    function togglePrayerExpand(e) {
-      if (e) e.stopPropagation();
-      if (currentHeroMode === 'prayer_4x2') {
-        setHeroMode('split');
-      } else {
-        setHeroMode('prayer_4x2');
-      }
-    }
-
-    function toggleWeatherExpand(e) {
-      if (e) e.stopPropagation();
-      if (currentHeroMode === 'weather_4x2') {
-        setHeroMode('split');
-      } else {
-        setHeroMode('weather_4x2');
-      }
-    }
-
-    function collapseHeroTo2x2(e) {
-      if (e) e.stopPropagation();
-      setHeroMode('split');
-    }
-
-    // Helper: Hitung nilai t siklus matahari/bulan (0.0 sunrise -> 1.0 sunset)
-    function calculateCelestialT(minutes) {
-      const sunrise = 307; // 05:07
-      const sunset = 1057; // 17:37
-      const isya = 1131;   // 18:51
-
-      if (minutes >= sunrise && minutes <= sunset) {
-        return (minutes - sunrise) / (sunset - sunrise);
-      } else {
-        if (minutes >= isya) {
-          return (minutes - isya) / 616;
-        } else {
-          return (1440 - isya + minutes) / 616;
-        }
-      }
-    }
-
-    let wushhhAnimId = null;
-    function triggerWushhhAnim() {
-      if (wushhhAnimId) cancelAnimationFrame(wushhhAnimId);
-      
-      const currentMin = parseInt(slider.value);
-      const targetT = calculateCelestialT(currentMin);
-      
-      let startTime = null;
-      const duration = 850;
-      
-      function sweep(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const elapsed = timestamp - startTime;
-        const progress = Math.min(elapsed / duration, 1.0);
-        const ease = 1 - Math.pow(1 - progress, 3);
-        const curT = ease * targetT;
-        
-        // Sesuaikan lebar orbit adaptif:
-        // Jika 4x2: lebar ~320px, orbit x dari 25px ke 343px (midday = 184px, sore 15:00 = 277px)
-        // Jika 2x2: lebar ~135px, orbit x dari 20px ke 155px (midday = 87.5px di pusat bento!)
-        const isP4 = (currentHeroMode === 'prayer_4x2');
-        const isW4 = (currentHeroMode === 'weather_4x2');
-        
-        const startXP = isP4 ? 25 : 20;
-        const spanXP = isP4 ? 318 : 135;
-        const xP = startXP + curT * spanXP;
-        const yP = (isP4 ? 110 : 96) - Math.sin(curT * Math.PI) * (isP4 ? 74 : 64);
-
-        const startXW = isW4 ? 25 : 20;
-        const spanXW = isW4 ? 318 : 135;
-        const xW = startXW + curT * spanXW;
-        const yW = (isW4 ? 110 : 96) - Math.sin(curT * Math.PI) * (isW4 ? 74 : 64);
-        
-        const elP = document.getElementById('celestial-body-p');
-        const elW = document.getElementById('celestial-body-w');
-        if (elP) {
-          elP.style.left = `${xP}px`;
-          elP.style.top = `${yP}px`;
-        }
-        if (elW) {
-          elW.style.left = `${xW}px`;
-          elW.style.top = `${yW}px`;
-        }
-        
-        if (progress < 1.0) {
-          wushhhAnimId = requestAnimationFrame(sweep);
-        } else {
-          wushhhAnimId = null;
-        }
-      }
-      wushhhAnimId = requestAnimationFrame(sweep);
-    }
-
-    function updateAtmosphere(minutes, skipWushhh = false) {
+    // Update siklus waktu dan sholat
+    function updateClock(minutes) {
       const h = Math.floor(minutes / 60).toString().padStart(2, '0');
       const m = (minutes % 60).toString().padStart(2, '0');
       const timeStr = `${h}:${m}`;
+
       timeDisplay.innerText = `${timeStr} WIB`;
       statusClock.innerText = timeStr;
 
-      if (minutes < 660) greetingText.innerText = "Selamat Pagi";
-      else if (minutes < 900) greetingText.innerText = "Selamat Siang";
-      else if (minutes < 1080) greetingText.innerText = "Selamat Sore";
-      else greetingText.innerText = "Selamat Malam";
-
-      const prayerCard = document.getElementById('bento-prayer-card');
-      const weatherCard = document.getElementById('bento-weather-card');
-      const starsP = document.getElementById('stars-layer-p');
-      const backHillP = document.getElementById('back-hill-p');
-      const frontHillP = document.getElementById('front-hill-p');
-      const backHillW = document.getElementById('back-hill-w');
-      const frontHillW = document.getElementById('front-hill-w');
-
-      // Variabel Cuaca Dinamis
-      const weatherTemp = document.getElementById('weather-temp');
-      const weatherCond = document.getElementById('weather-condition');
-      const weatherHum = document.getElementById('weather-humidity');
-      const weatherRain = document.getElementById('weather-rain-prob');
-      const weatherWind = document.getElementById('weather-wind');
-      const weatherUv = document.getElementById('weather-uv');
-      const weatherIcon = document.getElementById('weather-icon-container');
-
-      const hum2x2 = document.getElementById('weather-humidity-2x2');
-      const rain2x2 = document.getElementById('weather-rain-prob-2x2');
-      const wind2x2 = document.getElementById('weather-wind-2x2');
-      const uv2x2 = document.getElementById('weather-uv-2x2');
-
-      // Helper warna matahari / bulan
-      function setCelestialColor(isDay, discGradDay, glowDay, glowNight) {
-        const discP = document.getElementById('orb-disc-p');
-        const glowP = document.getElementById('orb-glow-p');
-        const discW = document.getElementById('orb-disc-w');
-        const glowW = document.getElementById('orb-glow-w');
-
-        if (isDay) {
-          if (discP) discP.style.background = discGradDay;
-          if (glowP) glowP.style.background = glowDay;
-          if (discW) discW.style.background = discGradDay;
-          if (glowW) glowW.style.background = glowDay;
-        } else {
-          const moonDisc = 'radial-gradient(circle at 35% 35%, #FFFFFF 0%, #F1F5F9 50%, #E2E8F0 80%, #94A3B8 100%)';
-          if (discP) discP.style.background = moonDisc;
-          if (glowP) glowP.style.background = glowNight;
-          if (discW) discW.style.background = moonDisc;
-          if (glowW) glowW.style.background = glowNight;
-        }
+      // Sapaan Editorial (Tanpa Emoji)
+      if (minutes >= 240 && minutes < 660) {
+        greetingHeading.innerText = "Selamat Pagi";
+        sliderPhaseLabel.innerText = "Pagi (Subuh lewat, menuju Dzuhur)";
+      } else if (minutes >= 660 && minutes < 900) {
+        greetingHeading.innerText = "Selamat Siang";
+        sliderPhaseLabel.innerText = "Siang (Dzuhur selesai, menuju Ashar)";
+      } else if (minutes >= 900 && minutes < 1080) {
+        greetingHeading.innerText = "Selamat Sore";
+        sliderPhaseLabel.innerText = "Sore (Ashar lewat, jelang Maghrib)";
+      } else {
+        greetingHeading.innerText = "Selamat Malam";
+        sliderPhaseLabel.innerText = "Malam (Isya lewat, waktu istirahat)";
       }
 
-      // FAJAR / SUBUH
-      if (minutes >= 240 && minutes < 360) {
-        const skyGrad = 'linear-gradient(180deg, #1E1B4B 0%, #312E81 35%, #4C1D95 70%, #701A75 100%)';
-        const borderCol = 'rgba(167, 139, 250, 0.4)';
-        prayerCard.style.background = skyGrad;
-        prayerCard.style.borderColor = borderCol;
-        weatherCard.style.background = skyGrad;
-        weatherCard.style.borderColor = borderCol;
+      // Hitung sholat berikutnya
+      let next = prayerSchedule.find(p => p.min > minutes);
+      if (!next) next = prayerSchedule[0]; // Roll ke Subuh esok hari
 
-        if (starsP) starsP.setAttribute('opacity', '0.6');
-        if (backHillP) backHillP.setAttribute('fill', 'rgba(49, 46, 129, 0.6)');
-        if (frontHillP) frontHillP.setAttribute('fill', 'rgba(30, 27, 75, 0.85)');
-        if (backHillW) backHillW.setAttribute('fill', 'rgba(49, 46, 129, 0.6)');
-        if (frontHillW) frontHillW.setAttribute('fill', 'rgba(30, 27, 75, 0.85)');
-
-        setCelestialColor(true, 
-          'radial-gradient(circle at 35% 35%, #FDE047 0%, #F59E0B 55%, #D97706 100%)',
-          'radial-gradient(circle, rgba(245, 158, 11, 0.6) 0%, rgba(217, 119, 6, 0.25) 55%, transparent 75%)',
-          'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)'
-        );
-
-        weatherTemp.innerText = "23°C";
-        weatherCond.innerText = "Udara Sejuk";
-        if (weatherHum) weatherHum.innerText = "88%";
-        if (weatherRain) weatherRain.innerText = "5%";
-        if (weatherWind) weatherWind.innerText = "6km/j";
-        if (weatherUv) weatherUv.innerText = "0";
-
-        if (hum2x2) hum2x2.innerText = "88%";
-        if (rain2x2) rain2x2.innerText = "5%";
-        if (wind2x2) wind2x2.innerText = "6km/j";
-        if (uv2x2) uv2x2.innerText = "0";
-
-        weatherIcon.innerHTML = `<span class="text-sm">🌅</span>`;
-      }
-      // PAGI
-      else if (minutes >= 360 && minutes < 660) {
-        const skyGrad = 'linear-gradient(180deg, #0284C7 0%, #38BDF8 35%, #7DD3FC 70%, #BAE6FD 100%)';
-        const borderCol = 'rgba(186, 230, 253, 0.55)';
-        prayerCard.style.background = skyGrad;
-        prayerCard.style.borderColor = borderCol;
-        weatherCard.style.background = skyGrad;
-        weatherCard.style.borderColor = borderCol;
-
-        if (starsP) starsP.setAttribute('opacity', '0');
-        if (backHillP) backHillP.setAttribute('fill', 'rgba(14, 116, 144, 0.55)');
-        if (frontHillP) frontHillP.setAttribute('fill', 'rgba(15, 80, 100, 0.78)');
-        if (backHillW) backHillW.setAttribute('fill', 'rgba(14, 116, 144, 0.55)');
-        if (frontHillW) frontHillW.setAttribute('fill', 'rgba(15, 80, 100, 0.78)');
-
-        setCelestialColor(true,
-          'radial-gradient(circle at 35% 35%, #FEF08A 0%, #FBBF24 50%, #F59E0B 80%, #D97706 100%)',
-          'radial-gradient(circle, rgba(251, 191, 36, 0.65) 0%, rgba(245, 158, 11, 0.28) 55%, transparent 75%)',
-          'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)'
-        );
-
-        weatherTemp.innerText = "27°C";
-        weatherCond.innerText = "Cerah Berawan";
-        if (weatherHum) weatherHum.innerText = "72%";
-        if (weatherRain) weatherRain.innerText = "10%";
-        if (weatherWind) weatherWind.innerText = "11km/j";
-        if (weatherUv) weatherUv.innerText = "4";
-
-        if (hum2x2) hum2x2.innerText = "72%";
-        if (rain2x2) rain2x2.innerText = "10%";
-        if (wind2x2) wind2x2.innerText = "11km/j";
-        if (uv2x2) uv2x2.innerText = "4";
-
-        weatherIcon.innerHTML = `<span class="text-sm">🌤️</span>`;
-      }
-      // SIANG (DZUHUR)
-      else if (minutes >= 660 && minutes < 900) {
-        const skyGrad = 'linear-gradient(180deg, #0284C7 0%, #38BDF8 30%, #38BDF8 60%, #7DD3FC 100%)';
-        const borderCol = 'rgba(186, 230, 253, 0.65)';
-        prayerCard.style.background = skyGrad;
-        prayerCard.style.borderColor = borderCol;
-        weatherCard.style.background = skyGrad;
-        weatherCard.style.borderColor = borderCol;
-
-        if (starsP) starsP.setAttribute('opacity', '0');
-        if (backHillP) backHillP.setAttribute('fill', 'rgba(14, 116, 144, 0.55)');
-        if (frontHillP) frontHillP.setAttribute('fill', 'rgba(15, 80, 100, 0.78)');
-        if (backHillW) backHillW.setAttribute('fill', 'rgba(14, 116, 144, 0.55)');
-        if (frontHillW) frontHillW.setAttribute('fill', 'rgba(15, 80, 100, 0.78)');
-
-        setCelestialColor(true,
-          'radial-gradient(circle at 35% 35%, #FFFFFF 0%, #FEF08A 35%, #FBBF24 75%, #F59E0B 100%)',
-          'radial-gradient(circle, rgba(254, 240, 138, 0.8) 0%, rgba(251, 191, 36, 0.35) 55%, transparent 75%)',
-          'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)'
-        );
-
-        weatherTemp.innerText = "31°C";
-        weatherCond.innerText = "Cerah Hangat";
-        if (weatherHum) weatherHum.innerText = "68%";
-        if (weatherRain) weatherRain.innerText = "15%";
-        if (weatherWind) weatherWind.innerText = "12km/j";
-        if (weatherUv) weatherUv.innerText = "6";
-
-        if (hum2x2) hum2x2.innerText = "68%";
-        if (rain2x2) rain2x2.innerText = "15%";
-        if (wind2x2) wind2x2.innerText = "12km/j";
-        if (uv2x2) uv2x2.innerText = "6";
-
-        weatherIcon.innerHTML = `<span class="text-sm">☀️</span>`;
-      }
-      // SORE (ASHAR Menjelang Maghrib)
-      else if (minutes >= 900 && minutes < 1080) {
-        const skyGrad = 'linear-gradient(180deg, #7C2D12 0%, #C2410C 35%, #EA580C 65%, #FB923C 100%)';
-        const borderCol = 'rgba(251, 146, 60, 0.5)';
-        prayerCard.style.background = skyGrad;
-        prayerCard.style.borderColor = borderCol;
-        weatherCard.style.background = skyGrad;
-        weatherCard.style.borderColor = borderCol;
-
-        if (starsP) starsP.setAttribute('opacity', '0.2');
-        if (backHillP) backHillP.setAttribute('fill', 'rgba(67, 20, 7, 0.65)');
-        if (frontHillP) frontHillP.setAttribute('fill', 'rgba(38, 10, 3, 0.88)');
-        if (backHillW) backHillW.setAttribute('fill', 'rgba(67, 20, 7, 0.65)');
-        if (frontHillW) frontHillW.setAttribute('fill', 'rgba(38, 10, 3, 0.88)');
-
-        setCelestialColor(true,
-          'radial-gradient(circle at 35% 35%, #FEF08A 0%, #FB923C 50%, #EA580C 80%, #C2410C 100%)',
-          'radial-gradient(circle, rgba(251, 146, 60, 0.7) 0%, rgba(234, 88, 12, 0.3) 55%, transparent 75%)',
-          'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)'
-        );
-
-        weatherTemp.innerText = "29°C";
-        weatherCond.innerText = "Sore Hangat";
-        if (weatherHum) weatherHum.innerText = "72%";
-        if (weatherRain) weatherRain.innerText = "25%";
-        if (weatherWind) weatherWind.innerText = "11km/j";
-        if (weatherUv) weatherUv.innerText = "4";
-
-        if (hum2x2) hum2x2.innerText = "72%";
-        if (rain2x2) rain2x2.innerText = "25%";
-        if (wind2x2) wind2x2.innerText = "11km/j";
-        if (uv2x2) uv2x2.innerText = "4";
-
-        weatherIcon.innerHTML = `<span class="text-sm">🌤️</span>`;
-      }
-      // MALAM (MAGHRIB & ISYA)
-      else {
-        const skyGrad = 'linear-gradient(180deg, #090D16 0%, #0F172A 40%, #1E293B 75%, #0B1120 100%)';
-        const borderCol = 'rgba(148, 163, 184, 0.28)';
-        prayerCard.style.background = skyGrad;
-        prayerCard.style.borderColor = borderCol;
-        weatherCard.style.background = skyGrad;
-        weatherCard.style.borderColor = borderCol;
-
-        if (starsP) starsP.setAttribute('opacity', '0.9');
-        if (backHillP) backHillP.setAttribute('fill', 'rgba(15, 23, 42, 0.8)');
-        if (frontHillP) frontHillP.setAttribute('fill', 'rgba(2, 6, 23, 0.95)');
-        if (backHillW) backHillW.setAttribute('fill', 'rgba(15, 23, 42, 0.8)');
-        if (frontHillW) frontHillW.setAttribute('fill', 'rgba(2, 6, 23, 0.95)');
-
-        setCelestialColor(false,
-          '',
-          '',
-          'radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(226, 232, 240, 0.25) 55%, transparent 75%)'
-        );
-
-        weatherTemp.innerText = "25°C";
-        weatherCond.innerText = "Malam Tenang";
-        if (weatherHum) weatherHum.innerText = "82%";
-        if (weatherRain) weatherRain.innerText = "5%";
-        if (weatherWind) weatherWind.innerText = "5km/j";
-        if (weatherUv) weatherUv.innerText = "0";
-
-        if (hum2x2) hum2x2.innerText = "82%";
-        if (rain2x2) rain2x2.innerText = "5%";
-        if (wind2x2) wind2x2.innerText = "5km/j";
-        if (uv2x2) uv2x2.innerText = "0";
-
-        weatherIcon.innerHTML = `<span class="text-sm">🌙</span>`;
-      }
-
-      // Hitung koordinat matahari / bulan adaptif sesuai mode 2x2 vs 4x2
-      if (!skipWushhh) {
-        const curT = calculateCelestialT(minutes);
-        const isP4 = (currentHeroMode === 'prayer_4x2');
-        const isW4 = (currentHeroMode === 'weather_4x2');
-
-        const startXP = isP4 ? 25 : 20;
-        const spanXP = isP4 ? 318 : 135;
-        const sunXP = startXP + curT * spanXP;
-        const sunYP = (isP4 ? 110 : 96) - Math.sin(curT * Math.PI) * (isP4 ? 74 : 64);
-
-        const startXW = isW4 ? 25 : 20;
-        const spanXW = isW4 ? 318 : 135;
-        const sunXW = startXW + curT * spanXW;
-        const sunYW = (isW4 ? 110 : 96) - Math.sin(curT * Math.PI) * (isW4 ? 74 : 64);
-
-        const elP = document.getElementById('celestial-body-p');
-        const elW = document.getElementById('celestial-body-w');
-        if (elP) {
-          elP.style.left = `${sunXP}px`;
-          elP.style.top = `${sunYP}px`;
-        }
-        if (elW) {
-          elW.style.left = `${sunXW}px`;
-          elW.style.top = `${sunYW}px`;
-        }
-      }
-
-      // Tentukan Sholat Berikutnya
-      let next = prayers.find(p => p.slot && p.min > minutes);
-      if (!next) next = prayers[0];
-
-      const bentoPrayerName = document.getElementById('bento-prayer-name');
-      const bentoPrayerTime = document.getElementById('bento-prayer-time');
-      const bentoPrayerCd = document.getElementById('bento-prayer-countdown');
-
-      if (bentoPrayerName) bentoPrayerName.innerText = next.name;
-      if (bentoPrayerTime) bentoPrayerTime.innerText = next.time;
+      nextPrayerName.innerText = next.name;
+      nextPrayerTime.innerText = next.time;
 
       const diffMin = next.min >= minutes ? (next.min - minutes) : (1440 - minutes + next.min);
       const diffH = Math.floor(diffMin / 60);
       const diffM = diffMin % 60;
-      if (bentoPrayerCd) {
-        bentoPrayerCd.innerText = diffH > 0 ? `${diffH} j ${diffM} m lagi` : `${diffM} mnt lagi`;
-      }
+      nextPrayerCountdown.innerText = diffH > 0 ? `${diffH} j ${diffM} m lagi` : `${diffM} mnt lagi`;
 
-      // Update 5-Dot Indikator di Bento Sholat
-      const prayerSlots = ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'];
-      prayerSlots.forEach(s => {
-        const dot = document.getElementById(`dot-${s}`);
-        if (!dot) return;
-        if (`slot-${s}` === next.slot) {
-          dot.className = "w-2 h-2 rounded-full bg-amber-400 ring-2 ring-amber-300/60 shadow-xs animate-pulse";
+      // Hitung persentase progress bar sholat
+      const pct = Math.min(100, Math.max(10, Math.round(((1440 - diffMin) / 1440) * 100)));
+      prayerProgressBar.style.width = `${pct}%`;
+
+      // Update highlight slot aktif
+      prayerSchedule.forEach(p => {
+        const slotEl = document.getElementById(`slot-${p.id}`);
+        if (!slotEl) return;
+        if (p.id === next.id) {
+          slotEl.className = "py-1 px-0.5 rounded-lg bg-white text-[#143E48] font-bold shadow-xs transition-all";
+          slotEl.children[0].className = "text-[9px] font-extrabold text-[#143E48]";
+          slotEl.children[1].className = "text-[11px] font-black text-[#143E48] tabular-nums";
         } else {
-          dot.className = "w-1.5 h-1.5 rounded-full bg-white/40";
+          slotEl.className = "py-1 px-0.5 rounded-lg bg-white/5 transition-all";
+          slotEl.children[0].className = "text-[9px] text-white/70 font-medium";
+          slotEl.children[1].className = "text-[11px] font-bold text-white tabular-nums";
         }
       });
     }
 
     slider.addEventListener('input', (e) => {
-      updateAtmosphere(parseInt(e.target.value));
+      updateClock(parseInt(e.target.value));
     });
 
-    // Jalankan efek Wushhh saat pertama kali dibuka!
-    updateAtmosphere(parseInt(slider.value), true);
-    setTimeout(() => {
-      triggerWushhhAnim();
-    }, 300);
-    // Interaktif Workout Progress Tracker (Sleek & Simple)
-    let completedSets = 3;
-    function logWorkoutSet() {
-      if (completedSets < 4) {
-        completedSets++;
+    function setPreset(min) {
+      slider.value = min;
+      updateClock(min);
+      showToast(`Waktu simulasi diubah ke ${Math.floor(min/60).toString().padStart(2,'0')}:${(min%60).toString().padStart(2,'0')}`);
+    }
+
+    // Toggle Collapsible Sunnah
+    let sunnahOpen = false;
+    function toggleSunnahStrip() {
+      sunnahOpen = !sunnahOpen;
+      const panel = document.getElementById('sunnah-detail-panel');
+      const chev = document.getElementById('sunnah-chevron');
+      if (sunnahOpen) {
+        panel.classList.remove('hidden');
+        chev.innerText = '▴';
       } else {
-        completedSets = 0; // reset
-      }
-      const track = document.getElementById('workout-progress-track');
-      if (track) {
-        const bars = track.querySelectorAll('span');
-        bars.forEach((bar, idx) => {
-          if (idx < completedSets) {
-            bar.className = "flex-1 h-2 rounded-full bg-amber-500 transition-colors";
-          } else {
-            bar.className = "flex-1 h-2 rounded-full bg-slate-200 transition-colors";
-          }
-        });
-      }
-      const badge = document.getElementById('workout-set-badge');
-      if (badge) {
-        badge.innerText = `${completedSets} / 4 Selesai`;
-      }
-      if (completedSets === 4) {
-        showToast("🎉 Hebat! Semua 4 Set Workout Tuntas!", "🏆");
-      } else if (completedSets > 0) {
-        showToast(`Set ${completedSets} Selesai!`, "🔥");
+        panel.classList.add('hidden');
+        chev.innerText = '▾';
       }
     }
 
-    // Interaktif Hidrasi Segments (10 gelas = 2500 ml)
-    let currentWater = 1500;
-    function addWater(amount = 250) {
-      currentWater = Math.min(2500, currentWater + amount);
-      const glasses = Math.min(10, Math.round(currentWater / 250));
-      const pct = Math.round((currentWater / 2500) * 100);
-      
-      const currentText = document.getElementById('water-text');
-      const pctBadge = document.getElementById('water-percent');
-      const segContainer = document.getElementById('water-glass-segments');
-      
-      if (currentText) currentText.innerText = currentWater.toLocaleString('id-ID');
-      if (pctBadge) pctBadge.innerText = `${pct}%`;
-      
-      if (segContainer) {
-        const spans = segContainer.querySelectorAll('span');
-        spans.forEach((span, i) => {
-          if (i < glasses) {
-            span.className = "flex-1 h-2 rounded-full bg-cyan-500 transition-colors";
-          } else {
-            span.className = "flex-1 h-2 rounded-full bg-slate-200 transition-colors";
-          }
-        });
-      }
-      showToast(`+${amount} ml diminum (${currentWater} / 2.500 ml)`, "💧");
-      if (currentWater >= 2500) {
-        showToast("🎉 Target Hidrasi 2.5L Tercapai Hari Ini!", "🌊");
-      }
-    }
+    // Interaktivitas Checkbox Checklist Konsisten (Lingkaran Navy -> Amber)
+    function toggleItemCheck(btn, type) {
+      const isChecked = btn.classList.contains('bg-[#F5A623]');
+      const svg = btn.querySelector('svg');
+      const row = btn.closest('.todo-row') || btn.closest('.flex');
+      const title = row ? row.querySelector('.item-title') : null;
 
-    // Interaktif Booster Claim
-    let boosterClaimed = false;
-    function claimBooster() {
-      const btn = document.getElementById('btn-booster');
-      if (!btn || boosterClaimed) return;
-      boosterClaimed = true;
-      btn.innerText = "✓ Selesai Diklaim (+25 XP)";
-      btn.className = "w-full py-1.5 bg-purple-50 text-purple-700 text-[11px] font-extrabold rounded-xl border border-purple-200 flex items-center justify-center gap-1 cursor-default shadow-2xs";
-      
-      const xpChip = document.getElementById('user-xp-chip');
-      if (xpChip) {
-        xpChip.innerText = "Lv 1 · 265 XP";
-      }
-      showToast("+25 XP berhasil diklaim!", "⚡");
-    }
-
-    // Workout Session Launcher
-    function startWorkoutSession() {
-      showToast("Sesi Workout Dimulai! Catat repetisi di tab Latihan.", "🏋️");
-    }
-
-    // Interaktif Study & Fokus (Pomodoro 15m, 25m, 50m)
-    let selectedStudyPreset = 25;
-    let isStudyActive = false;
-    let totalStudyMinutes = 0;
-    let studySessionsDone = 0;
-
-    function selectStudyPreset(mins) {
-      if (isStudyActive) return;
-      selectedStudyPreset = mins;
-      const chips = document.querySelectorAll('#study-duration-chips .study-chip');
-      chips.forEach(chip => {
-        const text = chip.innerText.trim();
-        if (text === `${mins}m`) {
-          chip.className = "study-chip py-0.5 rounded-md text-center font-black text-[9.5px] transition-all bg-teal-600 text-white shadow-2xs cursor-pointer";
-        } else {
-          chip.className = "study-chip py-0.5 rounded-md text-center font-bold text-[9.5px] transition-all bg-slate-100 hover:bg-teal-50 text-slate-600 hover:text-teal-700 border border-slate-200/80 cursor-pointer";
+      if (isChecked) {
+        btn.classList.remove('bg-[#F5A623]', 'border-transparent', 'text-[#143E48]');
+        btn.classList.add('bg-white', 'text-transparent');
+        if (svg) svg.classList.add('hidden');
+        if (title) {
+          title.classList.remove('line-through', 'opacity-70');
         }
+      } else {
+        btn.classList.remove('bg-white', 'text-transparent');
+        btn.classList.add('bg-[#F5A623]', 'border-transparent', 'text-[#143E48]');
+        if (svg) svg.classList.remove('hidden');
+        if (title) {
+          title.classList.add('line-through', 'opacity-70');
+        }
+        showToast("Checklist selesai dicatat");
+      }
+      refreshOverallProgress();
+    }
+
+    function refreshOverallProgress() {
+      const allChecks = document.querySelectorAll('.check-circle');
+      let done = 0;
+      allChecks.forEach(c => {
+        if (c.classList.contains('bg-[#F5A623]')) done++;
       });
-      const btnLabel = document.getElementById('study-btn-label');
-      if (btnLabel) btnLabel.innerText = `Mulai Fokus (${mins}m)`;
-      showToast(`Preset fokus: ${mins} menit`, "⏱️");
+      const total = allChecks.length;
+      const counter = document.getElementById('today-progress-counter');
+      const bar = document.getElementById('today-progress-bar');
+      if (counter) counter.innerText = `${done} / ${total} Selesai`;
+      if (bar) bar.style.width = `${Math.round((done / total) * 100)}%`;
     }
 
-    function toggleStudySession() {
-      const btn = document.getElementById('btn-study-action');
-      const icon = document.getElementById('study-btn-icon');
-      const label = document.getElementById('study-btn-label');
-      const badge = document.getElementById('study-status-badge');
-      const minText = document.getElementById('study-minutes-text');
-
-      if (!isStudyActive) {
-        // Mulai sesi
-        isStudyActive = true;
-        if (btn) btn.className = "w-full py-1.5 bg-rose-500 hover:bg-rose-600 text-white border border-rose-600 text-[11px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1 cursor-pointer shadow-xs animate-pulse";
-        if (icon) icon.innerText = "⏹";
-        if (label) label.innerText = "Selesaikan Fokus";
-        if (badge) {
-          badge.innerText = "Sedang Berjalan";
-          badge.className = "text-[9.5px] font-black text-rose-800 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full";
-        }
-        showToast(`⏱️ Sesi Fokus ${selectedStudyPreset} Menit Dimulai! Matikan gangguan HP.`, "🎯");
-      } else {
-        // Selesaikan sesi
-        isStudyActive = false;
-        studySessionsDone++;
-        totalStudyMinutes += selectedStudyPreset;
-        
-        if (btn) btn.className = "w-full py-1.5 bg-slate-50 hover:bg-teal-600 hover:text-white border border-slate-200 text-[#143E48] text-[11px] font-extrabold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1 cursor-pointer shadow-2xs";
-        if (icon) icon.innerText = "▷";
-        if (label) label.innerText = `Mulai Fokus (${selectedStudyPreset}m)`;
-        if (badge) {
-          badge.innerText = `${studySessionsDone} Sesi Tuntas`;
-          badge.className = "text-[9.5px] font-black text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full";
-        }
-        if (minText) minText.innerText = totalStudyMinutes;
-
-        // Tambah XP
-        const xpChip = document.getElementById('user-xp-chip');
-        if (xpChip) {
-          const currentXP = parseInt(xpChip.innerText.replace(/[^0-9]/g, '')) || 240;
-          xpChip.innerText = `Lv 1 · ${currentXP + 20} XP`;
-        }
-        showToast(`🎉 Sesi Fokus ${selectedStudyPreset}m tuntas! +20 XP ditambahkan!`, "🏆");
+    // Interaktivitas Hidrasi Cepat
+    let waterMl = 1500;
+    function addWaterInline(amt) {
+      waterMl = Math.min(3000, waterMl + amt);
+      const label = document.getElementById('water-intake-label');
+      if (label) {
+        label.innerText = `${waterMl.toLocaleString('id-ID')} / 2.500 ml (~6 hari galon)`;
       }
+      showToast(`+${amt} ml air diminum (${waterMl} ml)`);
     }
 
-    // Quick Expense Modal / Prompt (Berdasarkan Laporan Keuangan Riil)
-    let dailyBudgetRemaining = 44000;
-    const dailyBudgetLimit = 44000;
-    let monthlyBudgetRemaining = 750000;
-
-    function quickExpenseModal() {
-      const amt = prompt("Catat Pengeluaran Hari Ini (contoh: 15000):", "15000");
-      if (!amt) return;
-      const num = parseInt(amt.replace(/[^0-9]/g, ''));
+    // Interaktivitas Catat Pengeluaran
+    let dailyBudget = 44000;
+    function logExpensePrompt() {
+      const amtStr = prompt("Masukkan jumlah pengeluaran hari ini (Rp):", "12000");
+      if (!amtStr) return;
+      const num = parseInt(amtStr.replace(/[^0-9]/g, ''));
       if (isNaN(num) || num <= 0) return;
-      
-      dailyBudgetRemaining = Math.max(0, dailyBudgetRemaining - num);
-      monthlyBudgetRemaining = Math.max(0, monthlyBudgetRemaining - num);
-      const pct = Math.round((dailyBudgetRemaining / dailyBudgetLimit) * 100);
-      
-      const expText = document.getElementById('expense-text');
-      const expBadge = document.getElementById('expense-badge');
-      const monthText = document.getElementById('monthly-budget-text');
-      const bar = document.getElementById('budget-progress-bar');
-      
-      if (expText) {
-        const formatted = dailyBudgetRemaining >= 1000 ? `${Math.round(dailyBudgetRemaining / 1000)}rb` : `${dailyBudgetRemaining}`;
-        expText.innerText = `Rp ${formatted}`;
+      dailyBudget = Math.max(0, dailyBudget - num);
+      const expVal = document.getElementById('expense-daily-val');
+      const statusChip = document.getElementById('budget-status-chip');
+      if (expVal) expVal.innerText = `Rp ${dailyBudget >= 1000 ? Math.round(dailyBudget/1000) + 'rb' : dailyBudget}`;
+      if (statusChip) {
+        if (dailyBudget < 10000) {
+          statusChip.innerText = "Mepet";
+          statusChip.className = "text-[9.5px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded";
+        }
       }
-      if (monthText) {
-        monthText.innerText = `Sisa Bln: Rp ${monthlyBudgetRemaining.toLocaleString('id-ID')}`;
-      }
-      if (expBadge) {
-        expBadge.innerText = pct < 25 ? `Mepet (${pct}%)` : `Sisa ${pct}%`;
-        expBadge.className = pct < 25 
-          ? "text-[9.5px] font-black text-rose-800 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full"
-          : "text-[9.5px] font-black text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full";
-      }
-      if (bar) {
-        bar.style.width = `${pct}%`;
-        bar.className = pct < 25 ? "bg-rose-500 h-full rounded-full transition-all duration-500" : "bg-emerald-500 h-full rounded-full transition-all duration-500";
-      }
-      showToast(`Pengeluaran Rp ${num.toLocaleString('id-ID')} dicatat! (Sisa Rp ${dailyBudgetRemaining.toLocaleString('id-ID')})`, "💸");
+      showToast(`Pengeluaran Rp ${num.toLocaleString('id-ID')} dicatat`);
     }
 
-    // Interaktif Recipe Packet Switcher (Paket A, B, C)
-    const recipePackets = [
-      {
-        letter: 'A',
-        indicator: 'Paket A (Ketuk ganti)',
-        badgeBg: 'bg-amber-50',
-        badgeBorder: 'border-amber-200/80',
-        badgeText: 'text-amber-700',
-        sub: 'Pola Hemat Otot (Kost)',
-        title: 'Telur 5 + Tempe + Bening Bayam',
-        desc: '<span class="font-bold text-amber-700">[MC]</span> Nasi + telur 12 mnt + tempe di atas nasi. <span class="font-bold text-cyan-700">[PL]</span> Bening bayam & wortel.',
-        cost: 'Rp 22.500/hr',
-        prot: '61g Prot',
-        cal: '790 kkal'
-      },
-      {
-        letter: 'B',
-        indicator: 'Paket B (Ketuk ganti)',
-        badgeBg: 'bg-emerald-50',
-        badgeBorder: 'border-emerald-200/80',
-        badgeText: 'text-emerald-700',
-        sub: 'High Protein Ayam (Ekonomis)',
-        title: 'Dada Ayam Suwir 150g + Tahu Kukus',
-        desc: '<span class="font-bold text-emerald-700">[MC]</span> Dada fillet rebus suwir sambal bawang. <span class="font-bold text-cyan-700">[PL]</span> Lalap timun & selada air.',
-        cost: 'Rp 25.000/hr',
-        prot: '68g Prot',
-        cal: '820 kkal'
-      },
-      {
-        letter: 'C',
-        indicator: 'Paket C (Ketuk ganti)',
-        badgeBg: 'bg-orange-50',
-        badgeBorder: 'border-orange-200/80',
-        badgeText: 'text-orange-700',
-        sub: 'Super Hemat Akhir Bulan',
-        title: 'Orak-Arik Telur 3 + Tempe Penyet',
-        desc: '<span class="font-bold text-orange-700">[MC]</span> Telur orak-arik kecap + tempe goreng garing. <span class="font-bold text-cyan-700">[PL]</span> Sayur sop sawi putih.',
-        cost: 'Rp 16.000/hr',
-        prot: '45g Prot',
-        cal: '710 kkal'
-      }
+    // Switch Resep Hemat
+    const recipes = [
+      { code: 'Paket A', name: 'Telur 5 + Tempe', desc: 'Rp 22.500 · 61g Prot' },
+      { code: 'Paket B', name: 'Dada Ayam Suwir 150g', desc: 'Rp 25.000 · 68g Prot' },
+      { code: 'Paket C', name: 'Orak-Arik Telur 3 + Penyet', desc: 'Rp 16.000 · 45g Prot' }
     ];
-    let curRecipeIdx = 0;
-    function toggleRecipePacket() {
-      curRecipeIdx = (curRecipeIdx + 1) % recipePackets.length;
-      const p = recipePackets[curRecipeIdx];
-      
-      const ind = document.getElementById('recipe-packet-indicator');
-      const badgeBox = document.getElementById('recipe-badge-box');
-      const badgeLetter = document.getElementById('recipe-badge-letter');
-      const sub = document.getElementById('recipe-subtitle');
-      const title = document.getElementById('recipe-title');
-      const desc = document.getElementById('recipe-desc');
-      const cost = document.getElementById('recipe-cost');
-      const prot = document.getElementById('recipe-prot');
-      const cal = document.getElementById('recipe-cal');
-
-      if (ind) ind.innerText = p.indicator;
-      if (badgeBox) {
-        badgeBox.className = `w-16 h-16 rounded-2xl ${p.badgeBg} border ${p.badgeBorder} flex flex-col items-center justify-center flex-shrink-0 shadow-xs group-hover:scale-105 transition-transform`;
-      }
-      if (badgeLetter) {
-        badgeLetter.innerText = p.letter;
-        badgeLetter.className = `text-xl font-black ${p.badgeText} -mt-0.5 leading-none`;
-      }
-      if (sub) sub.innerText = p.sub;
-      if (title) title.innerText = p.title;
-      if (desc) desc.innerHTML = p.desc;
-      if (cost) cost.innerText = p.cost;
-      if (prot) prot.innerText = p.prot;
-      if (cal) cal.innerText = p.cal;
-
-      showToast(`Beralih ke Resep Paket ${p.letter}!`, "🍲");
+    let recipeIdx = 0;
+    function nextRecipePacket() {
+      recipeIdx = (recipeIdx + 1) % recipes.length;
+      const r = recipes[recipeIdx];
+      document.getElementById('recipe-code').innerText = r.code;
+      document.getElementById('recipe-name').innerText = r.name;
+      showToast(`Resep aktif: ${r.code}`);
     }
 
-    // Bottom Navigation Switcher
-    function selectNavTab(el, tabName) {
-      const items = document.querySelectorAll('#bottom-nav-bar .nav-item');
-      items.forEach(item => {
-        item.className = 'nav-item flex flex-col items-center text-[#6B7280] hover:text-[#143E48] transition-colors py-1 px-2 rounded-xl cursor-pointer';
-        const span = item.querySelector('span');
-        if (span) span.className = 'text-[10px] font-bold mt-0.5';
+    // Tambah Tugas Cepat
+    function promptNewTask() {
+      const taskName = prompt("Nama tugas atau jadwal baru:");
+      if (!taskName || !taskName.trim()) return;
+      const container = document.getElementById('todo-list-container');
+      const newRow = document.createElement('div');
+      newRow.className = "todo-row flex items-center justify-between py-2 px-2.5 rounded-xl hover:bg-slate-50 transition-colors";
+      newRow.innerHTML = `
+        <div class="flex items-center gap-3 min-w-0">
+          <button type="button" onclick="toggleItemCheck(this, 'task')" class="check-circle w-6 h-6 rounded-full border-2 border-[#143E48] flex items-center justify-center transition-all bg-white text-transparent hover:bg-slate-50" aria-label="Tandai selesai">
+            <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <div class="min-w-0">
+            <div class="text-xs font-bold text-[#143E48] truncate item-title">${taskName.trim()}</div>
+            <div class="text-[10px] text-[#6B7280]">Tugas tambahan</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="text-[10.5px] font-bold text-[#143E48] bg-slate-100 px-2 py-0.5 rounded tabular-nums">
+            Hari ini
+          </span>
+        </div>
+      `;
+      container.appendChild(newRow);
+      refreshOverallProgress();
+      showToast(`Tugas "${taskName.trim()}" ditambahkan`);
+    }
+
+    // Notifikasi Sheet Mockup
+    function showNotifSheet() {
+      showToast("Membuka Pengaturan Notifikasi Sholat");
+    }
+
+    // Switch Bottom Nav
+    function switchNav(btn, tabName) {
+      document.querySelectorAll('#bottom-nav .nav-btn').forEach(b => {
+        b.className = "nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#6B7280] hover:text-[#143E48] transition-colors";
+        b.removeAttribute('aria-current');
+        const span = b.querySelector('span');
+        if (span) span.className = "text-[10px] font-semibold mt-0.5";
       });
-      el.className = 'nav-item flex flex-col items-center text-amber-600 transition-colors py-1 px-2 rounded-xl bg-amber-50 cursor-pointer';
-      const activeSpan = el.querySelector('span');
-      if (activeSpan) activeSpan.className = 'text-[10px] font-extrabold mt-0.5';
-      
-      const tabNames = {
-        latihan: 'Tab Latihan (Workout & Target)',
-        makan: 'Tab Makan (Nutrisi & Resep)',
-        beranda: 'Tab Beranda (Dashboard Utama)',
-        uang: 'Tab Uang (Anggaran & Sisa)',
-        jadwal: 'Tab Jadwal (Kalender & Sholat)'
-      };
-      showToast(tabNames[tabName] || `Tab ${tabName}`, '📱');
+      btn.className = "nav-btn flex flex-col items-center py-1 px-2 rounded-xl text-[#143E48] font-bold bg-slate-100 transition-colors";
+      btn.setAttribute('aria-current', 'page');
+      const activeSpan = btn.querySelector('span');
+      if (activeSpan) activeSpan.className = "text-[10px] font-bold mt-0.5";
+      showToast(`Beralih ke Tab ${tabName}`);
     }
 
-    // Global Toast Notification
+    // Toast Alert
     let toastTimer = null;
-    function showToast(msg, icon = '✓') {
-      const toast = document.getElementById('global-toast');
-      const toastMsg = document.getElementById('toast-msg');
-      const toastIcon = document.getElementById('toast-icon');
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
       if (!toast) return;
-      if (toastMsg) toastMsg.innerText = msg;
-      if (toastIcon) toastIcon.innerText = icon;
-      
+      toastText.innerText = text;
       toast.classList.remove('opacity-0', 'pointer-events-none');
       toast.classList.add('opacity-100');
-      
       if (toastTimer) clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         toast.classList.remove('opacity-100');
         toast.classList.add('opacity-0', 'pointer-events-none');
-      }, 2200);
+      }, 2000);
     }
 
-    function setPreset(min) {
-      slider.value = min;
-      updateAtmosphere(min);
-      triggerWushhhAnim();
-    }
-  
-    // =========================================================================
-    // INTERAKTIF FLOATING TASK CARDS (BENCHMARK REFERENCE SPEC)
-    // =========================================================================
-    
-    // Toggle Check/Uncheck pada task card
-    function toggleTaskCard(clickableArea) {
-      const card = clickableArea.closest('.task-card');
-      if (!card) return;
-      const btn = card.querySelector('.task-circle-btn');
-      const title = card.querySelector('.task-title');
-      const checkIcon = btn ? btn.querySelector('svg') : null;
-      
-      const isChecked = btn && btn.classList.contains('bg-[#5B5FF4]');
-      
-      if (isChecked) {
-        // Switch to UNCHECKED state (Hollow ring, active text)
-        btn.className = "task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all border-2 border-slate-300 bg-white group-hover:border-indigo-400 text-transparent";
-        if (checkIcon) checkIcon.classList.add('hidden');
-        if (title) {
-          title.className = "task-title text-[13px] font-bold text-slate-800 truncate transition-all";
-        }
-      } else {
-        // Switch to CHECKED state (Solid indigo circle + white checkmark, strikethrough)
-        btn.className = "task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all bg-[#5B5FF4] border border-transparent shadow-xs text-white";
-        if (checkIcon) checkIcon.classList.remove('hidden');
-        if (title) {
-          title.className = "task-title text-[13px] font-bold text-slate-400 line-through truncate transition-all";
-        }
-        showToast("Tugas diselesaikan!", "✓");
-      }
-      updateTaskCount();
-    }
-
-    // Hitung total dan jumlah yang selesai
-    function updateTaskCount() {
-      const container = document.getElementById('task-items-container');
-      if (!container) return;
-      const cards = container.querySelectorAll('.task-card');
-      let checked = 0;
-      cards.forEach(c => {
-        const btn = c.querySelector('.task-circle-btn');
-        if (btn && btn.classList.contains('bg-[#5B5FF4]')) checked++;
-      });
-      const badge = document.getElementById('task-progress-badge');
-      if (badge) {
-        badge.innerText = `${checked} / ${cards.length} Selesai`;
-      }
-      if (cards.length > 0 && checked === cards.length) {
-        showToast("Semua tugas hari ini terselesaikan! 🎉", "🌟");
-      }
-    }
-
-    // Toggle 3-Dots Dropdown Menu
-    function toggleTaskMenu(e, btn) {
-      e.stopPropagation();
-      const menu = btn.nextElementSibling;
-      if (!menu) return;
-      const isHidden = menu.classList.contains('hidden');
-      document.querySelectorAll('.task-dropdown-menu').forEach(m => m.classList.add('hidden'));
-      if (isHidden) {
-        menu.classList.remove('hidden');
-      }
-    }
-
-    // Tutup menu jika klik di luar
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.task-dropdown-menu') && !e.target.closest('button[title="Opsi Tugas"]')) {
-        document.querySelectorAll('.task-dropdown-menu').forEach(m => m.classList.add('hidden'));
-      }
-    });
-
-    // Aksi dari 3-Dots Menu
-    function taskAction(e, btn, action) {
-      e.stopPropagation();
-      const menu = btn.closest('.task-dropdown-menu');
-      if (menu) menu.classList.add('hidden');
-      const card = btn.closest('.task-card');
-      if (!card) return;
-      const titleEl = card.querySelector('.task-title');
-      const title = titleEl ? titleEl.innerText.trim() : 'Tugas';
-
-      if (action === 'alarm') {
-        const time = prompt(`Setel Jam Alarm untuk "${title}":`, "07:00");
-        if (time && time.trim()) {
-          const sub = card.querySelector('.task-subtitle');
-          if (sub) {
-            sub.innerHTML = `<span>Today, ${time.trim()}</span><span class="text-slate-300">·</span><span class="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100"><svg class="w-2.5 h-2.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span>${time.trim()} Alarm</span></span>`;
-          }
-          showToast(`Alarm disetel: ${time.trim()}`, "⏰");
-        }
-      } else if (action === 'priority') {
-        const isPriority = card.classList.toggle('ring-2');
-        card.classList.toggle('ring-indigo-400');
-        showToast(isPriority ? "Ditandai sebagai Prioritas!" : "Prioritas dilepas", "⭐");
-      } else if (action === 'edit') {
-        const newTitle = prompt("Ubah Nama Tugas:", title);
-        if (newTitle && newTitle.trim()) {
-          titleEl.innerText = newTitle.trim();
-          showToast("Nama tugas diubah", "✏️");
-        }
-      } else if (action === 'delete') {
-        if (confirm(`Hapus tugas "${title}"?`)) {
-          card.remove();
-          updateTaskCount();
-          showToast(`Tugas "${title}" dihapus`, "🗑️");
-        }
-      }
-    }
-
-    // Buka Halaman Planning Lengkap
-    function openPlanningPage() {
-      showToast("Membuka To-Do List & Agenda Lengkap (Tab Planning)", "📋");
-    }
-
-    // Tambah Tugas Cepat
-    function quickAddTask() {
-      const title = prompt("Tambah Tugas Baru:");
-      if (!title || !title.trim()) return;
-      const container = document.getElementById('task-items-container');
-      if (!container) return;
-      const newDiv = document.createElement('div');
-      newDiv.className = "task-card flex items-center justify-between p-3.5 rounded-[22px] bg-white border border-slate-100 shadow-[0_3px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all group relative";
-      newDiv.innerHTML = `
-        <div class="flex items-center gap-3 flex-1 min-w-0 cursor-pointer" onclick="toggleTaskCard(this)">
-          <button type="button" aria-label="Status tugas" class="task-circle-btn w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all border-2 border-slate-300 bg-white group-hover:border-indigo-400 text-transparent">
-            <svg class="w-3.5 h-3.5 stroke-current stroke-3 hidden" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </button>
-          <div class="flex-1 min-w-0">
-            <div class="task-title text-[13px] font-bold text-slate-800 truncate transition-all">
-              ${title.trim()}
-            </div>
-            <div class="task-subtitle text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
-              <span>Today, Baru</span>
-              <span class="text-slate-300">·</span>
-              <span class="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-sky-700 bg-sky-50 px-1.5 py-0.2 rounded border border-sky-200">
-                <span>Rencana</span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="relative flex-shrink-0 ml-2">
-          <button onclick="toggleTaskMenu(event, this)" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer" title="Opsi Tugas">
-            <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/></svg>
-          </button>
-          <div class="task-dropdown-menu hidden absolute right-0 top-8 z-30 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 w-44 transition-all">
-            <button onclick="taskAction(event, this, 'alarm')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <span>Setel Alarm</span>
-            </button>
-            <button onclick="taskAction(event, this, 'priority')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-              <span>Tandai Prioritas</span>
-            </button>
-            <button onclick="taskAction(event, this, 'edit')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-              <span>Edit Nama</span>
-            </button>
-            <div class="h-px bg-slate-100 my-1"></div>
-            <button onclick="taskAction(event, this, 'delete')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-              <span>Hapus</span>
-            </button>
-          </div>
-        </div>
-      `;
-      container.appendChild(newDiv);
-      updateTaskCount();
-      showToast(`Tugas "${title.trim()}" ditambahkan!`, "📝");
-    }
-</script>
-
-  </div> <!-- Close layout-wrapper -->
-
-  </body>
+    // Inisialisasi awal
+    updateClock(375);
+    refreshOverallProgress();
+  </script>
+</body>
 </html>

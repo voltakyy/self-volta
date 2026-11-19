@@ -1277,13 +1277,14 @@ class _TaskCard extends StatelessWidget {
                           ),
                           if (t.note.isNotEmpty) ...[
                             const SizedBox(height: 2),
-                            Text(
-                              t.note,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            ExpandableNoteText(
+                              text: t.note,
+                              maxLines: 2,
+                              readMoreColor: TodoPal.mintDeep,
                               style: const TextStyle(
                                 fontFamily: 'Manrope',
                                 fontSize: 11.5,
+                                height: 1.35,
                                 color: TodoPal.sec,
                               ),
                             ),
@@ -1559,12 +1560,15 @@ class _TodoEditorState extends State<_TodoEditor> {
 
   static const _pris = ['Santai', 'Sedang', 'Penting'];
 
-  InputDecoration _field(String hint) => InputDecoration(
+  InputDecoration _field(String hint, {bool isMultiLine = false}) => InputDecoration(
     hintText: hint,
     hintStyle: const TextStyle(color: Star.mut),
     filled: true,
     fillColor: TodoPal.field,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    contentPadding: EdgeInsets.symmetric(
+      horizontal: 14,
+      vertical: isMultiLine ? 14 : 12,
+    ),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: TodoPal.hair, width: 1.5),
@@ -1838,14 +1842,16 @@ class _TodoEditorState extends State<_TodoEditor> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: _note,
-                  maxLines: 2,
-                  minLines: 1,
+                  minLines: 2,
+                  maxLines: 5,
+                  keyboardType: TextInputType.multiline,
                   style: const TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 13.5,
+                    height: 1.4,
                     color: TodoPal.ink,
                   ),
-                  decoration: _field('Deskripsi (opsional)'),
+                  decoration: _field('Deskripsi (opsional)', isMultiLine: true),
                 ),
                 const SizedBox(height: 14),
 
