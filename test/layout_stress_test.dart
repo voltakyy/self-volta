@@ -7,6 +7,8 @@ import 'package:self_volta/store.dart';
 import 'package:self_volta/theme.dart';
 import 'package:self_volta/services/prayer_service.dart';
 import 'package:self_volta/pages/air_page.dart';
+import 'package:self_volta/pages/aktivitas_page.dart';
+import 'package:self_volta/services/activity_math.dart';
 import 'package:self_volta/pages/booster_page.dart';
 import 'package:self_volta/pages/buat_page.dart';
 import 'package:self_volta/pages/choice_plan_page.dart';
@@ -31,6 +33,9 @@ void main() {
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
     await AppState.I.load();
+    // Satu aktivitas GPS hari ini: kartu Latihan, kartu Beranda, riwayat,
+    // dan detail ikut dirender dengan data (bukan hanya keadaan kosong).
+    AppState.I.activities = [_sampleActivity()];
     PrayerService.instance;
     final loader = FontLoader('Manrope')
       ..addFont(rootBundle.load('assets/fonts/Manrope-Variable.ttf'));
@@ -54,6 +59,10 @@ void main() {
     'Ingin': () => const InginPage(),
     'Buat Kombinasi': () => const BuatPage(),
     'Minggu 1-2': () => const MingguPage(m1: true, onGo: _noop),
+    'Rekam Aktivitas': () => const RekamAktivitasPage(),
+    'Riwayat Aktivitas': () => const RiwayatAktivitasPage(),
+    'Detail Aktivitas': () =>
+        AktivitasDetailPage(activity: _sampleActivity(), pending: true),
   };
 
   Future<void> pumpPage(
@@ -122,6 +131,8 @@ void main() {
     'To-Do',
     'Jadwal',
     'Planning',
+    'Rekam Aktivitas',
+    'Detail Aktivitas',
   ];
   for (final name in stressPages) {
     for (final size in const [Size(320, 568), Size(360, 640), Size(800, 360)]) {
@@ -216,3 +227,24 @@ void main() {
 }
 
 void _noop(String _) {}
+
+GpsActivity _sampleActivity() {
+  final now = DateTime.now();
+  final pts = [
+    for (var i = 0; i < 40; i++)
+      LatLngLite(-7.78 + i * 1.2e-4, 110.37 + (i % 7) * 1.5e-4),
+  ];
+  return GpsActivity(
+    id: 'a_layout',
+    type: ActivityType.run,
+    name: 'Lari Sore Keliling Kampus Panjang Sekali Namanya',
+    start: DateTime(now.year, now.month, now.day, 16, 40),
+    elapsedSec: 3725,
+    movingSec: 3600,
+    distanceM: 10234,
+    elevGainM: 48,
+    kcal: 634,
+    splits: const [345, 352, 360, 371, 349, 358, 362, 340, 355, 366],
+    route: [ActivityMath.encode(pts)],
+  );
+}

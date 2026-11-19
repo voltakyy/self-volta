@@ -9,6 +9,14 @@
     <!-- Alarm layar penuh: bangunkan layar terkunci + mainkan nada alarm. -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- Rekam aktivitas GPS (lari/jalan/sepeda). Izin "saat app digunakan"
+         saja: foreground service tipe location yang dimulai dari layar depan
+         tetap menerima GPS saat layar mati, TANPA ACCESS_BACKGROUND_LOCATION.
+         Service-nya dideklarasikan oleh plugin geolocator_android. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <application
         android:label="self_volta"
         android:name="${applicationName}"

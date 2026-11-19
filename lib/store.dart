@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data.dart';
+import 'services/activity_math.dart';
 import 'services/alarm_audio.dart';
 import 'services/todo_notifications.dart';
 
@@ -315,6 +316,113 @@ class StudySession {
   );
 }
 
+/// Satu aktivitas GPS tersimpan (lari / jalan kaki / sepeda).
+/// Rute disimpan sebagai encoded polyline per segmen (dipisah jeda) dan
+/// sudah disederhanakan maks ±600 titik supaya `sv_v1` tetap ringan.
+class GpsActivity {
+  final String id;
+  final ActivityType type;
+  final String name;
+  final DateTime start;
+  final int elapsedSec; // total sejak mulai, tanpa masa jeda manual
+  final int movingSec; // tanpa auto-pause (berhenti di lampu merah dll.)
+  final double distanceM;
+  final double elevGainM; // perkiraan
+  final int kcal; // perkiraan
+  final List<int> splits; // detik per km tuntas
+  final List<String> route; // encoded polyline per segmen
+
+  const GpsActivity({
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.start,
+    required this.elapsedSec,
+    required this.movingSec,
+    required this.distanceM,
+    required this.elevGainM,
+    required this.kcal,
+    this.splits = const [],
+    this.route = const [],
+  });
+
+  /// "yyyy-MM-dd" tanggal mulai (zona lokal).
+  String get date =>
+      '${start.year.toString().padLeft(4, '0')}-'
+      '${start.month.toString().padLeft(2, '0')}-'
+      '${start.day.toString().padLeft(2, '0')}';
+
+  bool get earnsXp => distanceM >= type.xpMinMeters;
+
+  List<List<LatLngLite>> get segments {
+    final out = <List<LatLngLite>>[];
+    for (final r in route) {
+      try {
+        final pts = ActivityMath.decode(r);
+        if (pts.isNotEmpty) out.add(pts);
+      } on FormatException {
+        // Segmen rusak dilewati; statistik tetap tampil.
+      }
+    }
+    return out;
+  }
+
+  GpsActivity rename(String n) => GpsActivity(
+    id: id,
+    type: type,
+    name: n,
+    start: start,
+    elapsedSec: elapsedSec,
+    movingSec: movingSec,
+    distanceM: distanceM,
+    elevGainM: elevGainM,
+    kcal: kcal,
+    splits: splits,
+    route: route,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'ty': type.name,
+    'n': name,
+    'st': start.toIso8601String(),
+    'el': elapsedSec,
+    'mv': movingSec,
+    'd': double.parse(distanceM.toStringAsFixed(1)),
+    'eg': double.parse(elevGainM.toStringAsFixed(1)),
+    'kc': kcal,
+    'sp': splits,
+    'rt': route,
+  };
+
+  static GpsActivity? fromJson(Map<String, dynamic> j) {
+    final id = j['id'] as String?;
+    final st = DateTime.tryParse('${j['st']}');
+    if (id == null || id.isEmpty || st == null) return null;
+    final type = ActivityType.parse(j['ty'] as String?);
+    final rawName = (j['n'] as String? ?? '').trim();
+    return GpsActivity(
+      id: id,
+      type: type,
+      name: rawName.isNotEmpty ? rawName : type.label,
+      start: st,
+      elapsedSec: (j['el'] as num?)?.toInt() ?? 0,
+      movingSec: (j['mv'] as num?)?.toInt() ?? 0,
+      distanceM: (j['d'] as num?)?.toDouble() ?? 0,
+      elevGainM: (j['eg'] as num?)?.toDouble() ?? 0,
+      kcal: (j['kc'] as num?)?.toInt() ?? 0,
+      splits: [
+        for (final e in (j['sp'] as List? ?? const []))
+          if (e is num) e.toInt(),
+      ],
+      route: [
+        for (final e in (j['rt'] as List? ?? const []))
+          if (e is String) e,
+      ],
+    );
+  }
+}
+
 /// Informasi pemulihan saat `sv_v1` tidak bisa dibaca (dipakai UI).
 class LoadRecovery {
   final String corruptKey;
@@ -334,6 +442,9 @@ class AppState extends ChangeNotifier {
   AppState._();
 
   Map<String, bool> workoutDone = {};
+
+  /// Aktivitas GPS tersimpan, terbaru di depan.
+  List<GpsActivity> activities = [];
   List<Txn> txns = [];
   List<MealNote> mealNotes = [];
   List<CustomMeal> customMeals = [];
@@ -804,6 +915,11 @@ class AppState extends ChangeNotifier {
       }
     });
 
+    // Aktivitas GPS punya tanggalnya sendiri (workoutDone direset harian).
+    for (final a in activities) {
+      if (a.earnsXp) activeDates.add(a.date);
+    }
+
     final now = DateTime.now();
     final todayStr = '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     final yesterday = now.subtract(const Duration(days: 1));
@@ -839,6 +955,80 @@ class AppState extends ChangeNotifier {
     }
     return streak;
   }
+
+  // ---- Aktivitas GPS (lari / jalan / sepeda) ----
+
+  static String _xpKeyOf(ActivityType t) => 'gps_${t.name}';
+
+  /// Simpan aktivitas selesai. XP diberikan sekali per jenis per hari dan
+  /// hanya bila jarak memenuhi ambang minimal (anti-grind). Mengembalikan
+  /// XP yang diberikan (0 bila tidak ada).
+  Future<int> addActivity(GpsActivity a) async {
+    activities
+      ..removeWhere((x) => x.id == a.id)
+      ..add(a)
+      ..sort((x, y) => y.start.compareTo(x.start));
+    var gained = 0;
+    if (a.earnsXp && a.date == todayKey) {
+      if (claimXp(_xpKeyOf(a.type), a.type.xpReward)) gained = a.type.xpReward;
+    }
+    recalculateStreak();
+    notifyListeners();
+    await flushNow(); // rekaman GPS tidak bisa diulang: tulis segera
+    return gained;
+  }
+
+  Future<void> renameActivity(String id, String name) async {
+    final i = activities.indexWhere((a) => a.id == id);
+    final n = name.trim();
+    if (i < 0 || n.isEmpty) return;
+    activities[i] = activities[i].rename(n);
+    notifyListeners();
+    await flushNow();
+  }
+
+  /// Hapus aktivitas. Simetris dengan klaim: bila XP jenis ini diklaim
+  /// hari ini dan tidak ada aktivitas sah lain hari ini, XP ditarik.
+  Future<void> deleteActivity(String id) async {
+    final i = activities.indexWhere((a) => a.id == id);
+    if (i < 0) return;
+    final a = activities.removeAt(i);
+    final key = _xpKeyOf(a.type);
+    if (a.date == todayKey && isClaimed(key)) {
+      final stillValid = activities.any(
+        (x) => x.type == a.type && x.date == todayKey && x.earnsXp,
+      );
+      if (!stillValid) {
+        final amt = xpClaimed.remove(key) ?? 0;
+        if (amt > 0) removeXp(amt);
+      }
+    }
+    notifyListeners();
+    await flushNow();
+  }
+
+  /// Aktivitas minggu berjalan (Senin 00.00 s/d sekarang).
+  List<GpsActivity> get activitiesThisWeek {
+    final n = DateTime.now();
+    final monday = DateTime(n.year, n.month, n.day - (n.weekday - 1));
+    return [
+      for (final a in activities)
+        if (!a.start.isBefore(monday)) a,
+    ];
+  }
+
+  double get weekActivityMeters =>
+      activitiesThisWeek.fold(0.0, (s, a) => s + a.distanceM);
+
+  /// Hari (1=Senin..7=Minggu) minggu ini yang punya aktivitas GPS.
+  Set<int> get weekActivityDays => {
+    for (final a in activitiesThisWeek) a.start.weekday,
+  };
+
+  List<GpsActivity> get activitiesToday => [
+    for (final a in activities)
+      if (a.date == todayKey) a,
+  ];
 
   // ---- Buku besar XP harian (anti grinding) ----
   /// Kunci tanggal hari ini "yyyy-MM-dd".
@@ -898,6 +1088,7 @@ class AppState extends ChangeNotifier {
     eatenM.clear();
     boughtM.clear();
     workoutDone.clear();
+    activities.clear();
     txns.clear();
     mealNotes.clear();
     customMeals.clear();
@@ -1057,6 +1248,7 @@ class AppState extends ChangeNotifier {
     eatenM.clear();
     boughtM.clear();
     workoutDone.clear();
+    activities.clear();
     txns.clear();
     mealNotes.clear();
     customMeals.clear();
@@ -1126,6 +1318,10 @@ class AppState extends ChangeNotifier {
       if (legacy.isNotEmpty) boughtM[cur] = legacy;
     }
     workoutDone = _mb(j['workout']);
+    activities = [
+      for (final e in (j['activities'] as List? ?? const []))
+        if (e is Map<String, dynamic>) ?GpsActivity.fromJson(e),
+    ]..sort((a, b) => b.start.compareTo(a.start));
     budget = j['budget'] as int? ?? 750000;
     income = j['income'] as int? ?? 900000;
     weightKg = (j['weightKg'] as num?)?.toDouble() ?? 62.0;
@@ -1232,6 +1428,7 @@ class AppState extends ChangeNotifier {
     'eatenM': eatenM,
     'boughtM': boughtM,
     'workout': workoutDone,
+    'activities': activities.map((a) => a.toJson()).toList(),
     'txns': txns.map((t) => t.toJson()).toList(),
     'mealNotes': mealNotes.map((n) => n.toJson()).toList(),
     'customMeals': customMeals.map((m) => m.toJson()).toList(),
@@ -1488,6 +1685,16 @@ class AppState extends ChangeNotifier {
       });
     }
     mergeMap(j['workout'], workoutDone);
+
+    // ---- aktivitas GPS (id unik) ----
+    final actIds = <String>{for (final a in activities) a.id};
+    for (final e in (j['activities'] as List? ?? const [])) {
+      if (e is! Map<String, dynamic>) continue;
+      final a = GpsActivity.fromJson(e);
+      if (a == null || !actIds.add(a.id)) continue;
+      activities.add(a);
+    }
+    activities.sort((a, b) => b.start.compareTo(a.start));
 
     // ---- buku besar XP: simpan nilai terbesar per sumber ----
     final xc = j['xpClaimed'];

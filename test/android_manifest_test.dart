@@ -51,6 +51,26 @@ void main() {
     }
   });
 
+  test('manifest memuat izin rekam aktivitas GPS (foreground service)', () {
+    final xml = manifest.readAsStringSync();
+    for (final p in const [
+      'android.permission.ACCESS_FINE_LOCATION',
+      'android.permission.ACCESS_COARSE_LOCATION',
+      'android.permission.FOREGROUND_SERVICE',
+      // Android 14+: tanpa izin tipe ini startForeground() crash.
+      'android.permission.FOREGROUND_SERVICE_LOCATION',
+    ]) {
+      expect(xml, contains(p), reason: 'Izin $p hilang dari manifest.');
+    }
+    expect(
+      xml,
+      isNot(contains('android.permission.ACCESS_BACKGROUND_LOCATION')),
+      reason:
+          'Rekam aktivitas cukup izin saat-digunakan + foreground service; '
+          'izin lokasi latar belakang memicu review Play Store yang ketat.',
+    );
+  });
+
   test('activity siap membuka alarm dari layar terkunci', () {
     final xml = manifest.readAsStringSync();
     expect(xml, contains('android:showWhenLocked="true"'));

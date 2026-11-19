@@ -954,6 +954,13 @@ class _HomePageState extends State<HomePage>
       _ => 'Jalan · Mobilitas · Napas',
     };
     final total = session?.ex.length ?? 4;
+    // Aktivitas GPS hari ini ikut tampil di kartu Workout Beranda.
+    final gpsToday = st.activitiesToday;
+    final gpsMeters = gpsToday.fold(0.0, (s, a) => s + a.distanceM);
+    final gpsLine = gpsToday.isEmpty
+        ? null
+        : '${gpsToday.first.type.shortLabel} '
+              '${(gpsMeters / 1000).toStringAsFixed(1).replaceAll('.', ',')} km';
     var done = 0;
     if (session != null) {
       for (var i = 0; i < session.ex.length; i++) {
@@ -1008,7 +1015,10 @@ class _HomePageState extends State<HomePage>
           ),
           const SizedBox(height: 4),
           Text(
-            session == null ? 'Hari pemulihan' : '$done dari $total gerakan',
+            [
+              session == null ? 'Hari pemulihan' : '$done dari $total gerakan',
+              ?gpsLine,
+            ].join(' · '),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(

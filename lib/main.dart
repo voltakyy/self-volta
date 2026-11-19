@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'pages/alarm_page.dart';
 import 'pages/shell.dart';
+import 'services/activity_recorder.dart';
 import 'services/todo_notifications.dart';
 import 'store.dart';
 import 'theme.dart';
@@ -16,6 +17,9 @@ Future<void> main() async {
     unawaited(openAlarmFromPayload(payload));
   };
   await AppState.I.load();
+  // Rekaman GPS yang terputus (app dibunuh sistem) dipulihkan dalam
+  // keadaan jeda; user memilih Lanjut / Selesai di halaman Latihan.
+  await ActivityRecorder.I.restoreCheckpoint();
   unawaited(AppState.I.syncData());
   runApp(const SelfVoltaApp());
   // Notifikasi adalah fitur native: inisialisasi setelah frame pertama,

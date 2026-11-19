@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'aktivitas_page.dart';
 import 'choice_plan_page.dart';
 import 'workout_reminder_sheet.dart';
 
@@ -151,6 +152,12 @@ class WorkoutPage extends StatelessWidget {
             // HERO SHORTCUT: CHOICE PLAN (TENTUKAN SENDIRI LATIHAN HARI INI)
             // ============================================================
             _buildChoicePlanHeroCard(context),
+            const SizedBox(height: 14),
+
+            // ============================================================
+            // REKAM AKTIVITAS GPS (LARI, JALAN KAKI, SEPEDA)
+            // ============================================================
+            const AktivitasCard(),
             const SizedBox(height: 14),
 
             // ============================================================

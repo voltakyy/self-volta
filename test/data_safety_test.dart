@@ -15,6 +15,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:self_volta/data.dart';
+import 'package:self_volta/services/activity_math.dart';
 import 'package:self_volta/services/backup_service.dart';
 import 'package:self_volta/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,6 +54,21 @@ void seedSampleData() {
   s.piano = [PianoDep(111, 2, 50000, '3-11-2026')];
   s.combos = List.of(DEFAULT_COMBOS);
   s.workoutDone = {'a1': true, 'b2': true};
+  s.activities = [
+    GpsActivity(
+      id: 'a1763450000000',
+      type: ActivityType.run,
+      name: 'Lari Sore',
+      start: DateTime(2026, 11, 10, 16, 40),
+      elapsedSec: 1900,
+      movingSec: 1800,
+      distanceM: 5020.5,
+      elevGainM: 12,
+      kcal: 318,
+      splits: const [355, 360, 362, 358, 365],
+      route: const ['_p~iF~ps|U_ulLnnqC_mqNvxq`@'],
+    ),
+  ];
   s.todos = [
     const SvTask(
       id: 9,
