@@ -295,4 +295,47 @@ void main() {
     expect(find.byKey(const Key('aktivitas-mulai')), findsOneWidget);
     expect(ctrl.hasListener, isFalse);
   });
+
+  testWidgets(
+    'RouteView: menampilkan indikator peta, tombol pusatkan dan toggle peta',
+    (tester) async {
+      const segments = [
+        [LatLngLite(-7.78, 110.37), LatLngLite(-7.77, 110.37)],
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildTheme(),
+          home: const Scaffold(
+            body: RouteView(
+              segments: segments,
+              isLive: true,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Default mode kanvas garis: ada legenda indikator mulai & posisi anda
+      expect(find.text('Mulai'), findsOneWidget);
+      expect(find.text('Posisi Anda'), findsOneWidget);
+      expect(find.byKey(const Key('rute-peta')), findsOneWidget);
+      expect(find.text('Peta'), findsOneWidget);
+      expect(find.byKey(const Key('rute-pusatkan')), findsNothing);
+
+      // Buka mode Peta (OpenStreetMap)
+      await tester.tap(find.byKey(const Key('rute-peta')));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      // Tombol pusatkan sekarang muncul, tombol toggle berubah jadi "Garis"
+      expect(find.text('Garis'), findsOneWidget);
+      expect(find.byKey(const Key('rute-pusatkan')), findsOneWidget);
+
+      // Tap tombol pusatkan tidak melempar error
+      await tester.tap(find.byKey(const Key('rute-pusatkan')));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+    },
+  );
 }

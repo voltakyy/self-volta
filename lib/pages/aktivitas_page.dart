@@ -708,11 +708,13 @@ class RouteView extends StatefulWidget {
   final List<List<LatLngLite>> segments;
   final double height;
   final String emptyText;
+  final bool isLive;
   const RouteView({
     super.key,
     required this.segments,
     this.height = 220,
     this.emptyText = 'Rute muncul setelah GPS mengunci posisi.',
+    this.isLive = false,
   });
 
   @override
@@ -721,11 +723,61 @@ class RouteView extends StatefulWidget {
 
 class _RouteViewState extends State<RouteView> {
   bool _map = false;
+  MapController? _mapController;
+  bool _autoFollow = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = MapController();
+  }
+
+  @override
+  void didUpdateWidget(RouteView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_map && widget.isLive && _autoFollow && _mapController != null) {
+      final pts = [for (final s in widget.segments) ...s];
+      if (pts.isNotEmpty) {
+        try {
+          final zoom = _mapController!.camera.zoom;
+          _mapController!.move(ll.LatLng(pts.last.lat, pts.last.lng), zoom);
+        } catch (_) {}
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
+  }
+
+  void _onPositionChanged(MapCamera camera, bool hasGesture) {
+    if (hasGesture && _autoFollow) {
+      setState(() => _autoFollow = false);
+    }
+  }
+
+  void _recenter(List<LatLngLite> pts) {
+    if (_mapController == null || pts.isEmpty) return;
+    setState(() => _autoFollow = true);
+    if (widget.isLive) {
+      _mapController!.move(ll.LatLng(pts.last.lat, pts.last.lng), 16.5);
+    } else {
+      _mapController!.fitCamera(
+        CameraFit.coordinates(
+          coordinates: [for (final p in pts) ll.LatLng(p.lat, p.lng)],
+          padding: const EdgeInsets.all(32),
+          maxZoom: 17,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final pts = [for (final s in widget.segments) ...s];
-    final hasRoute = pts.length >= 2;
+    final hasPoints = pts.isNotEmpty;
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Container(
@@ -738,7 +790,7 @@ class _RouteViewState extends State<RouteView> {
         child: Stack(
           children: [
             Positioned.fill(
-              child: !hasRoute
+              child: !hasPoints
                   ? Center(
                       child: Padding(
                         padding: const EdgeInsets.all(16),
@@ -765,56 +817,183 @@ class _RouteViewState extends State<RouteView> {
                       ),
                     )
                   : _map
-                  ? _OsmMap(segments: widget.segments, points: pts)
+                  ? _OsmMap(
+                      segments: widget.segments,
+                      points: pts,
+                      isLive: widget.isLive,
+                      controller: _mapController,
+                      onPositionChanged: _onPositionChanged,
+                    )
                   : CustomPaint(
-                      painter: RoutePainter(widget.segments, grid: true),
+                      painter: RoutePainter(
+                        widget.segments,
+                        grid: true,
+                        isLive: widget.isLive,
+                      ),
                     ),
             ),
-            if (hasRoute)
+            if (hasPoints) ...[
               Positioned(
                 top: 8,
                 right: 8,
-                child: Tooltip(
-                  message: _map ? 'Sembunyikan peta' : 'Tampilkan peta (internet)',
-                  child: PopTap(
-                    key: const Key('rute-peta'),
-                    onTap: () => setState(() => _map = !_map),
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        minHeight: 48,
-                        minWidth: 48,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Star.surface,
-                        borderRadius: BorderRadius.circular(999),
-                        border: Border.all(color: Star.line),
-                        boxShadow: Neu.shadows(d: 4),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            _map ? Icons.layers_clear_rounded : Icons.map_rounded,
-                            size: 18,
-                            color: Star.star,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            _map ? 'Garis' : 'Peta',
-                            style: const TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w700,
-                              color: Star.star,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_map) ...[
+                      Tooltip(
+                        message: widget.isLive
+                            ? 'Pusatkan ke lokasi saya'
+                            : 'Pusatkan seluruh rute',
+                        child: PopTap(
+                          key: const Key('rute-pusatkan'),
+                          onTap: () => _recenter(pts),
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 48,
+                              minWidth: 48,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Star.surface,
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(color: Star.line),
+                              boxShadow: Neu.shadows(d: 4),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  widget.isLive
+                                      ? Icons.my_location_rounded
+                                      : Icons.crop_free_rounded,
+                                  size: 18,
+                                  color: const Color(0xFF0284C7),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  widget.isLive ? 'Lokasi' : 'Pusat',
+                                  style: const TextStyle(
+                                    fontFamily: 'Manrope',
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF0284C7),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                    Tooltip(
+                      message: _map
+                          ? 'Sembunyikan peta'
+                          : 'Tampilkan peta (internet)',
+                      child: PopTap(
+                        key: const Key('rute-peta'),
+                        onTap: () => setState(() => _map = !_map),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                            minHeight: 48,
+                            minWidth: 48,
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Star.surface,
+                            borderRadius: BorderRadius.circular(999),
+                            border: Border.all(color: Star.line),
+                            boxShadow: Neu.shadows(d: 4),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _map
+                                    ? Icons.layers_clear_rounded
+                                    : Icons.map_rounded,
+                                size: 18,
+                                color: Star.star,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                _map ? 'Garis' : 'Peta',
+                                style: const TextStyle(
+                                  fontFamily: 'Manrope',
+                                  fontSize: 12.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Star.star,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 8,
+                left: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Star.surface.withValues(alpha: 0.92),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(color: Star.lineSoft),
+                    boxShadow: Neu.shadows(d: 2),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Star.success,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Text(
+                        'Mulai',
+                        style: TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Star.mut,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: widget.isLive
+                              ? const Color(0xFF0284C7)
+                              : Star.ink,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.isLive ? 'Posisi Anda' : 'Selesai',
+                        style: const TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Star.mut,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ],
           ],
         ),
       ),
@@ -825,22 +1004,42 @@ class _RouteViewState extends State<RouteView> {
 class _OsmMap extends StatelessWidget {
   final List<List<LatLngLite>> segments;
   final List<LatLngLite> points;
-  const _OsmMap({required this.segments, required this.points});
+  final bool isLive;
+  final MapController? controller;
+  final void Function(MapCamera, bool)? onPositionChanged;
+  const _OsmMap({
+    required this.segments,
+    required this.points,
+    this.isLive = false,
+    this.controller,
+    this.onPositionChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     ll.LatLng c(LatLngLite p) => ll.LatLng(p.lat, p.lng);
+    final firstPt = points.isNotEmpty ? points.first : null;
+    final lastPt = points.isNotEmpty ? points.last : null;
+
+    final initialCameraFit = points.length >= 2
+        ? CameraFit.coordinates(
+            coordinates: [for (final p in points) c(p)],
+            padding: const EdgeInsets.all(32),
+            maxZoom: 17,
+          )
+        : null;
+
     return FlutterMap(
+      mapController: controller,
       options: MapOptions(
-        initialCameraFit: CameraFit.coordinates(
-          coordinates: [for (final p in points) c(p)],
-          padding: const EdgeInsets.all(32),
-          maxZoom: 17,
-        ),
+        initialCenter: points.length == 1 ? c(points.first) : const ll.LatLng(0, 0),
+        initialZoom: points.length == 1 ? 16.5 : 13,
+        initialCameraFit: initialCameraFit,
         backgroundColor: Star.sunken,
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.drag | InteractiveFlag.pinchZoom,
         ),
+        onPositionChanged: onPositionChanged,
       ),
       children: [
         TileLayer(
@@ -848,15 +1047,166 @@ class _OsmMap extends StatelessWidget {
           userAgentPackageName: 'com.selfvolta.self_volta',
           maxNativeZoom: 19,
         ),
-        PolylineLayer(
-          polylines: [
-            for (final s in segments)
-              Polyline(
-                points: [for (final p in s) c(p)],
-                color: Star.workout,
-                strokeWidth: 4,
-                borderColor: Star.surface,
-                borderStrokeWidth: 2,
+        if (points.length >= 2)
+          PolylineLayer(
+            polylines: [
+              for (final s in segments)
+                if (s.length >= 2)
+                  Polyline(
+                    points: [for (final p in s) c(p)],
+                    color: Star.workout,
+                    strokeWidth: 4,
+                    borderColor: Star.surface,
+                    borderStrokeWidth: 2,
+                  ),
+            ],
+          ),
+        MarkerLayer(
+          markers: [
+            if (firstPt != null && points.length == 1)
+              Marker(
+                point: c(firstPt),
+                width: 32,
+                height: 32,
+                child: Center(
+                  child: isLive
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0284C7).withValues(alpha: 0.28),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Container(
+                              width: 16,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0284C7),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2.5),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black38,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: Star.success,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.play_arrow_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                ),
+              ),
+            if (firstPt != null && points.length >= 2)
+              Marker(
+                point: c(firstPt),
+                width: 28,
+                height: 28,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Star.success,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.play_arrow_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ),
+            if (lastPt != null && points.length >= 2)
+              Marker(
+                point: c(lastPt),
+                width: 32,
+                height: 32,
+                child: Center(
+                  child: isLive
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0284C7).withValues(alpha: 0.28),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Container(
+                              width: 16,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0284C7),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2.5),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black38,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: Star.ink,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.flag_rounded,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                ),
               ),
           ],
         ),
@@ -896,11 +1246,13 @@ class RoutePainter extends CustomPainter {
   final bool grid;
   final double stroke;
   final double pad;
+  final bool isLive;
   RoutePainter(
     this.segments, {
     this.grid = false,
     this.stroke = 4,
     this.pad = 24,
+    this.isLive = false,
   });
 
   @override
@@ -918,6 +1270,24 @@ class RoutePainter extends CustomPainter {
     }
     final all = [for (final s in segments) ...s];
     if (all.isEmpty) return;
+    if (all.length == 1) {
+      final center = Offset(size.width / 2, size.height / 2);
+      if (isLive) {
+        canvas.drawCircle(
+          center,
+          stroke + 8,
+          Paint()..color = const Color(0xFF0284C7).withValues(alpha: 0.28),
+        );
+      }
+      canvas
+        ..drawCircle(center, stroke + 3, Paint()..color = Star.surface)
+        ..drawCircle(
+          center,
+          stroke + 1,
+          Paint()..color = isLive ? const Color(0xFF0284C7) : Star.success,
+        );
+      return;
+    }
     var minLat = all.first.lat, maxLat = minLat;
     var minLng = all.first.lng, maxLng = minLng;
     for (final p in all) {
@@ -971,13 +1341,24 @@ class RoutePainter extends CustomPainter {
     }
 
     dot(all.first, Star.success);
-    dot(all.last, Star.ink);
+    if (isLive) {
+      final o = proj(all.last);
+      canvas.drawCircle(
+        o,
+        stroke + 7,
+        Paint()..color = const Color(0xFF0284C7).withValues(alpha: 0.28),
+      );
+      dot(all.last, const Color(0xFF0284C7));
+    } else {
+      dot(all.last, Star.ink);
+    }
   }
 
   @override
   bool shouldRepaint(RoutePainter old) =>
       !identical(old.segments, segments) ||
-      old.segments.length != segments.length;
+      old.segments.length != segments.length ||
+      old.isLive != isLive;
 }
 
 // ===========================================================================
@@ -1266,7 +1647,10 @@ class _RekamAktivitasPageState extends State<RekamAktivitasPage> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      RouteView(segments: _rec.track?.route ?? const []),
+                      RouteView(
+                        segments: _rec.track?.route ?? const [],
+                        isLive: true,
+                      ),
                       const SizedBox(height: 12),
                       const MarginNote(
                         'Layar boleh dimatikan: notifikasi "SELF VOLTA merekam" '
