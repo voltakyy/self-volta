@@ -1180,6 +1180,18 @@ class _TaskCard extends StatelessWidget {
       decorationColor: Star.mut,
     );
 
+    // Warna garis aksen kiri berdasarkan kategori/status
+    final accentColor = done
+        ? TodoPal.hair
+        : (overdue
+              ? TodoPal.coral
+              : switch (t.cat) {
+                  'Pekerjaan' => Star.star,
+                  'Belajar' => Star.star,
+                  'Kesehatan' => TodoPal.coral,
+                  _ => TodoPal.mint,
+                });
+
     return Dismissible(
       key: ValueKey('task_${t.id}'),
       direction: DismissDirection.endToStart,
@@ -1198,6 +1210,7 @@ class _TaskCard extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           borderRadius: BorderRadius.circular(18),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onOpen,
             borderRadius: BorderRadius.circular(18),
@@ -1205,22 +1218,15 @@ class _TaskCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Garis aksen telat / kategori.
+                  // Garis aksen kiri – rounded sesuai card corner kiri
                   Container(
-                    width: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    width: 4,
                     decoration: BoxDecoration(
-                      color: done
-                          ? TodoPal.hair
-                          : (overdue
-                                ? TodoPal.coral
-                                : switch (t.cat) {
-                                    'Pekerjaan' => Star.star,
-                                    'Belajar' => Star.star,
-                                    'Kesehatan' => TodoPal.coral,
-                                    _ => TodoPal.mint,
-                                  }),
-                      borderRadius: BorderRadius.circular(2),
+                      color: accentColor,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(18),
+                        bottomLeft: Radius.circular(18),
+                      ),
                     ),
                   ),
                   // Kolom jam.
@@ -1394,16 +1400,17 @@ class _TaskCard extends StatelessWidget {
 
   static Widget _miniChip(String label, IconData icon, Color fg, Color bg) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: fg.withValues(alpha: .25), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 10, color: fg),
-          const SizedBox(width: 3),
+          Icon(icon, size: 10.5, color: fg),
+          const SizedBox(width: 4),
           Text(
             label,
             style: TextStyle(

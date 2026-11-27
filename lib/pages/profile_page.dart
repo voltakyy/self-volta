@@ -65,7 +65,7 @@ class ProfilePage extends StatelessWidget {
             // ============================================================
             // 3. GRAFIK BATANG AKTIVITAS MINGGUAN (Weekly Consistency Chart)
             // ============================================================
-            _buildWeeklyActivityChart(),
+            _buildWeeklyActivityChart(context),
             const SizedBox(height: 16),
 
             // ============================================================
@@ -307,112 +307,234 @@ class ProfilePage extends StatelessWidget {
   }
 
   // -------------------------------------------------------------
-  // 3. GRAFIK BATANG AKTIVITAS MINGGUAN (FL_CHART)
+  // 3. GRAFIK BATANG AKTIVITAS MINGGUAN (FL_CHART) – data nyata
   // -------------------------------------------------------------
-  Widget _buildWeeklyActivityChart() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: Neu.raised(r: 16, d: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Expanded(
-                child: Row(
-                  children: [
-                    Icon(Icons.bar_chart_rounded, color: Star.nebula, size: 20),
-                    SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        'Aktivitas 7 Hari Terakhir',
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Star.ink,
+  Widget _buildWeeklyActivityChart(BuildContext context) {
+    final st = AppState.I;
+    final today = DateTime.now();
+
+    // Hitung progress per hari (7 hari ke belakang, mulai Senin minggu ini)
+    // Rumus: (todos selesai / total todos hari itu) * 100, minimum 0
+    List<(String, String, List<SvTask>)> days = [];
+    for (int i = 6; i >= 0; i--) {
+      final d = today.subtract(Duration(days: i));
+      final key =
+          '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+      const labels = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+      final label = labels[d.weekday - 1];
+      final doneTasks = st.todos
+          .where((t) => t.done && t.doneAt == key)
+          .toList();
+      days.add((label, key, doneTasks));
+    }
+
+    // Hitung nilai bar per hari berdasarkan tugas selesai
+    List<double> barValues = days.map((d) {
+      final dateKey = d.$2;
+      final allForDay = st.todos.where((t) => st.dateOf(t) == dateKey).length;
+      final doneForDay = d.$3.length;
+      if (allForDay == 0 && doneForDay == 0) return 0.0;
+      if (allForDay == 0) return (doneForDay > 0 ? 50.0 : 0.0);
+      return ((doneForDay / allForDay) * 100).clamp(0.0, 100.0);
+    }).toList();
+
+    return GestureDetector(
+      onTap: () => _showActivityLogSheet(context, null, days),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: Neu.raised(r: 16, d: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Row(
+                    children: [
+                      Icon(Icons.bar_chart_rounded, color: Star.nebula, size: 20),
+                      SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          'Aktivitas 7 Hari Terakhir',
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Star.ink,
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Row(
+                  children: [
+                    Text(
+                      'Lihat Log',
+                      style: TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: Star.nebula,
+                      ),
                     ),
+                    const SizedBox(width: 2),
+                    const Icon(Icons.chevron_right_rounded, size: 16, color: Star.nebula),
                   ],
                 ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Target 100%',
-                style: TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  color: Star.faint,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 120,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: 100,
-                barTouchData: BarTouchData(enabled: false),
-                titlesData: FlTitlesData(
-                  show: true,
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (val, meta) {
-                        const days = [
-                          'Sen',
-                          'Sel',
-                          'Rab',
-                          'Kam',
-                          'Jum',
-                          'Sab',
-                          'Min',
-                        ];
-                        final i = val.toInt();
-                        if (i >= 0 && i < days.length) {
-                          return Text(
-                            days[i],
-                            style: const TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 10.5,
-                              color: Star.mut,
-                            ),
-                          );
+              ],
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 120,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: 100,
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchCallback: (event, response) {
+                      if (event is FlTapUpEvent &&
+                          response != null &&
+                          response.spot != null) {
+                        final idx = response.spot!.touchedBarGroupIndex;
+                        if (idx >= 0 && idx < days.length) {
+                          _showActivityLogSheet(context, idx, days);
                         }
-                        return const SizedBox();
+                      }
+                    },
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (_) => Star.ink,
+                      tooltipPadding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        final pct = rod.toY.toStringAsFixed(0);
+                        return BarTooltipItem(
+                          '$pct%',
+                          const TextStyle(
+                            fontFamily: 'Manrope',
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 11,
+                          ),
+                        );
                       },
                     ),
                   ),
-                  leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (val, meta) {
+                          final i = val.toInt();
+                          if (i >= 0 && i < days.length) {
+                            final isToday = days[i].$2 ==
+                                '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+                            return Text(
+                              days[i].$1,
+                              style: TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 10.5,
+                                fontWeight: isToday
+                                    ? FontWeight.w700
+                                    : FontWeight.w400,
+                                color: isToday ? Star.nebula : Star.mut,
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                    ),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                  gridData: const FlGridData(show: false),
+                  borderData: FlBorderData(show: false),
+                  barGroups: [
+                    for (int i = 0; i < days.length; i++)
+                      _bar(
+                        i,
+                        barValues[i],
+                        barValues[i] >= 80
+                            ? Star.star
+                            : (barValues[i] >= 40
+                                  ? Star.nebula
+                                  : (barValues[i] > 0
+                                        ? Star.nebula.withValues(alpha: .5)
+                                        : Star.sunken)),
+                      ),
+                  ],
                 ),
-                gridData: const FlGridData(show: false),
-                borderData: FlBorderData(show: false),
-                barGroups: [
-                  _bar(0, 90, Star.nebula),
-                  _bar(1, 100, Star.star),
-                  _bar(2, 85, Star.nebula),
-                  _bar(3, 95, Star.star),
-                  _bar(4, 100, Star.star),
-                  _bar(5, 75, Star.nebula),
-                  _bar(6, 100, Star.star),
-                ],
               ),
             ),
+            const SizedBox(height: 8),
+            // Legend sederhana
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _chartLegend(Star.star, '≥ 80%'),
+                const SizedBox(width: 12),
+                _chartLegend(Star.nebula, '40–79%'),
+                const SizedBox(width: 12),
+                _chartLegend(Star.sunken, 'Belum ada'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _chartLegend(Color color, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
           ),
-        ],
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 10,
+            color: Star.mut,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showActivityLogSheet(
+    BuildContext context,
+    int? selectedDay,
+    List<(String, String, List<SvTask>)> days,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _ActivityLogSheet(
+        days: days,
+        initialDay: selectedDay,
       ),
     );
   }
@@ -2633,4 +2755,333 @@ class _AchItem {
     required this.progressText,
     required this.progress,
   });
+}
+
+// ============================================================================
+// ACTIVITY LOG SHEET – modal bottom sheet untuk log aktivitas 7 hari terakhir
+// ============================================================================
+class _ActivityLogSheet extends StatefulWidget {
+  final List<(String, String, List<SvTask>)> days;
+  final int? initialDay;
+
+  const _ActivityLogSheet({required this.days, this.initialDay});
+
+  @override
+  State<_ActivityLogSheet> createState() => _ActivityLogSheetState();
+}
+
+class _ActivityLogSheetState extends State<_ActivityLogSheet> {
+  late int _selectedDay;
+
+  @override
+  void initState() {
+    super.initState();
+    // Default ke hari ini (index terakhir = hari ini)
+    _selectedDay = widget.initialDay ?? (widget.days.length - 1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final day = widget.days[_selectedDay];
+    final label = day.$1;
+    final dateKey = day.$2;
+    // day.$3 tidak dipakai langsung – gunakan allTasks dari AppState untuk data terkini
+
+    // Semua todos hari itu (done + open) untuk total
+    final st = AppState.I;
+    final allTasks = st.todos.where((t) => st.dateOf(t) == dateKey).toList();
+    final openTasks = allTasks.where((t) => !t.done).toList();
+    final doneTasks = allTasks.where((t) => t.done).toList();
+    final pct = allTasks.isEmpty
+        ? 0
+        : ((doneTasks.length / allTasks.length) * 100).round();
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.65,
+      minChildSize: 0.4,
+      maxChildSize: 0.9,
+      builder: (_, controller) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Paper.canvas,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Star.sunken,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              // Header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Log Aktivitas',
+                            style: TextStyle(
+                              fontFamily: 'Manrope',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Star.ink,
+                            ),
+                          ),
+                          Text(
+                            '$label — $pct% selesai',
+                            style: const TextStyle(
+                              fontFamily: 'Manrope',
+                              fontSize: 13,
+                              color: Star.mut,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, color: Star.mut),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              // Pill hari
+              SizedBox(
+                height: 36,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: widget.days.length,
+                  separatorBuilder: (_, _2) => const SizedBox(width: 6),
+                  itemBuilder: (_, i) {
+                    final d = widget.days[i];
+                    final isSelected = i == _selectedDay;
+                    final isToday = i == widget.days.length - 1;
+                    return GestureDetector(
+                      onTap: () => setState(() => _selectedDay = i),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Star.nebula : Star.sunken,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          isToday ? 'Hari ini' : d.$1,
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected ? Colors.white : Star.mut,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Progress bar mini
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '${doneTasks.length}/${allTasks.length} tugas selesai',
+                          style: const TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Star.nebula,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '$pct%',
+                          style: const TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Star.ink,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: LinearProgressIndicator(
+                        value: allTasks.isEmpty ? 0 : doneTasks.length / allTasks.length,
+                        minHeight: 6,
+                        backgroundColor: Star.sunken,
+                        valueColor: AlwaysStoppedAnimation(
+                          pct >= 80 ? Star.star : Star.nebula,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // List tugas
+              Expanded(
+                child: allTasks.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.inbox_rounded, size: 40, color: Star.sunken),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Tidak ada tugas hari ini',
+                              style: TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 13,
+                                color: Star.mut,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView(
+                        controller: controller,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+                        children: [
+                          if (doneTasks.isNotEmpty) ...[
+                            const Padding(
+                              padding: EdgeInsets.only(left: 4, bottom: 8),
+                              child: Text(
+                                'Selesai',
+                                style: TextStyle(
+                                  fontFamily: 'Manrope',
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Star.nebula,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            for (final t in doneTasks) _logTaskTile(t, true),
+                            const SizedBox(height: 12),
+                          ],
+                          if (openTasks.isNotEmpty) ...[
+                            const Padding(
+                              padding: EdgeInsets.only(left: 4, bottom: 8),
+                              child: Text(
+                                'Belum selesai',
+                                style: TextStyle(
+                                  fontFamily: 'Manrope',
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Star.mut,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            for (final t in openTasks) _logTaskTile(t, false),
+                          ],
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _logTaskTile(SvTask t, bool done) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: done
+              ? Star.nebula.withValues(alpha: .06)
+              : Paper.card,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: done
+                ? Star.nebula.withValues(alpha: .2)
+                : Star.sunken,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              done ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+              size: 20,
+              color: done ? Star.nebula : Star.mut,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.title,
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: done ? Star.mut : Star.ink,
+                      decoration: done ? TextDecoration.lineThrough : null,
+                      decorationColor: Star.mut,
+                    ),
+                  ),
+                  if (t.note.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      t.note,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 11.5,
+                        color: Star.faint,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (t.xp > 0)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: done
+                      ? Star.star.withValues(alpha: .15)
+                      : Star.sunken,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  '+${t.xp} XP',
+                  style: TextStyle(
+                    fontFamily: 'Manrope',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: done ? Star.star : Star.mut,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
