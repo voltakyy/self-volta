@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 // tidak ada tulisan update); user tidak perlu melihatnya.
 
-const APP_VERSION = '1.2.24';
+const APP_VERSION = '1.4.0+39';
 
 class Pola {
   final String k;
