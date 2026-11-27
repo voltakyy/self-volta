@@ -260,7 +260,7 @@ class ProfilePage extends StatelessWidget {
     required Color bgColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: Neu.raised(r: 14, d: 4),
       child: Row(
         children: [
@@ -270,9 +270,9 @@ class ProfilePage extends StatelessWidget {
               color: bgColor,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(icon, color: color, size: 19),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,19 +283,22 @@ class ProfilePage extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontFamily: 'Manrope',
-                    fontSize: 12,
+                    fontSize: 11.5,
                     color: Star.mut,
                   ),
                 ),
-                Text(
-                  value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Star.ink,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w700,
+                      color: Star.ink,
+                    ),
                   ),
                 ),
               ],
@@ -331,7 +334,9 @@ class ProfilePage extends StatelessWidget {
     // Hitung nilai bar per hari berdasarkan tugas selesai
     List<double> barValues = days.map((d) {
       final dateKey = d.$2;
-      final allForDay = st.todos.where((t) => st.dateOf(t) == dateKey).length;
+      final allForDay = st.todos
+          .where((t) => st.dateOf(t) == dateKey || (t.done && t.doneAt == dateKey))
+          .length;
       final doneForDay = d.$3.length;
       if (allForDay == 0 && doneForDay == 0) return 0.0;
       if (allForDay == 0) return (doneForDay > 0 ? 50.0 : 0.0);
@@ -2789,7 +2794,9 @@ class _ActivityLogSheetState extends State<_ActivityLogSheet> {
 
     // Semua todos hari itu (done + open) untuk total
     final st = AppState.I;
-    final allTasks = st.todos.where((t) => st.dateOf(t) == dateKey).toList();
+    final allTasks = st.todos
+        .where((t) => st.dateOf(t) == dateKey || (t.done && t.doneAt == dateKey))
+        .toList();
     final openTasks = allTasks.where((t) => !t.done).toList();
     final doneTasks = allTasks.where((t) => t.done).toList();
     final pct = allTasks.isEmpty
@@ -2864,7 +2871,7 @@ class _ActivityLogSheetState extends State<_ActivityLogSheet> {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: widget.days.length,
-                  separatorBuilder: (_, _2) => const SizedBox(width: 6),
+                  separatorBuilder: (_, _) => const SizedBox(width: 6),
                   itemBuilder: (_, i) {
                     final d = widget.days[i];
                     final isSelected = i == _selectedDay;

@@ -1231,9 +1231,9 @@ class _TaskCard extends StatelessWidget {
                   ),
                   // Kolom jam.
                   SizedBox(
-                    width: 54,
+                    width: 64,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 12, 0, 12),
+                      padding: const EdgeInsets.fromLTRB(10, 12, 4, 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1319,14 +1319,11 @@ class _TaskCard extends StatelessWidget {
                                       : TodoPal.amberSoft,
                                 ),
                               if (t.xp > 0)
-                                Text(
+                                _miniChip(
                                   '+${t.xp} XP',
-                                  style: const TextStyle(
-                                    fontFamily: 'Manrope',
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    color: TodoPal.mintDeep,
-                                  ),
+                                  Icons.bolt_rounded,
+                                  TodoPal.mintDeep,
+                                  TodoPal.mintSoft,
                                 ),
                               if (t.reminder && t.timeMin >= 0 && !t.done)
                                 InkWell(
@@ -1342,14 +1339,11 @@ class _TaskCard extends StatelessWidget {
                                   ),
                                 ),
                               if (overdue && !t.done)
-                                const Text(
+                                _miniChip(
                                   'Telat',
-                                  style: TextStyle(
-                                    fontFamily: 'Manrope',
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    color: TodoPal.coral,
-                                  ),
+                                  Icons.schedule_rounded,
+                                  TodoPal.coral,
+                                  TodoPal.coralSoft,
                                 ),
                             ],
                           ),

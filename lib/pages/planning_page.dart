@@ -3201,6 +3201,27 @@ class _PlanningPageState extends State<PlanningPage> {
             ],
           ),
           const SizedBox(height: 12),
+          // Ilustrasi foto menu paket aktif
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              height: 120,
+              width: double.infinity,
+              color: Star.sunken,
+              child: Image.asset(
+                'assets/images/paket_${activePola.k.toLowerCase()}.png',
+                fit: BoxFit.cover,
+                errorBuilder: (ctx, err, stack) => const Center(
+                  child: Icon(
+                    Icons.restaurant_rounded,
+                    color: Star.mut,
+                    size: 32,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           Text(
             activePola.t,
             style: const TextStyle(
@@ -3552,33 +3573,60 @@ class _PlanningPageState extends State<PlanningPage> {
                         },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
+                          width: 170,
+                          padding: const EdgeInsets.all(10),
                           decoration: isSel
                               ? BoxDecoration(
                                   color: Star.star,
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(14),
                                 )
-                              : Neu.raised(r: 12, d: 3),
+                              : Neu.raised(r: 14, d: 3),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  height: 76,
+                                  width: double.infinity,
+                                  color: isSel
+                                      ? Colors.white.withValues(alpha: 0.16)
+                                      : Star.sunken,
+                                  child: Image.asset(
+                                    'assets/images/paket_${k.toLowerCase()}.png',
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (ctx, err, stack) => Center(
+                                      child: Icon(
+                                        Icons.restaurant_rounded,
+                                        color: isSel
+                                            ? Star.onAccent
+                                            : Star.mut,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
                               Text(
                                 'Paket $k (Rp ${p.b ~/ 1000}rb)',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'Manrope',
-                                  fontSize: 11,
+                                  fontSize: 11.5,
                                   fontWeight: FontWeight.w700,
                                   color: isSel ? Star.onAccent : Star.star,
                                 ),
                               ),
+                              const SizedBox(height: 2),
                               Text(
                                 p.t.split('|').last.trim(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'Manrope',
-                                  fontSize: 9.5,
+                                  fontSize: 10,
                                   color: isSel ? Star.onAccent70 : Star.ink,
                                 ),
                               ),
